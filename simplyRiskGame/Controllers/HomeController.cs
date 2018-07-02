@@ -10,7 +10,16 @@ namespace simplyRiskGame.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.myTroopLimit = 10;
+            ViewBag.IATroopLimit = 10;
             return View();
+        }
+
+        //this methods are called with ajax
+        [HttpPost]
+        public ActionResult commit()
+        {
+            return Json(new { success = false, });
         }
 
         public ActionResult About()
