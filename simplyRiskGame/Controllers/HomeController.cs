@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using simplyRiskGame.Models;
 
 namespace simplyRiskGame.Controllers
 {
@@ -15,27 +16,29 @@ namespace simplyRiskGame.Controllers
             return View();
         }
 
-        //this methods are called with ajax
+        ////this methods are called with ajax
+        //[HttpPost]
+        //public ActionResult commit()
+        //{
+        //    return Json(new { success = false, });
+        //}
+
+        //public ActionResult About()
+        //{
+        //    ViewBag.Message = "Your application description page.";
+
+        //    return View();
+        //}
+
+        //public ActionResult Contact()
+        //{
+        //    ViewBag.Message = "Your contact page.";
+
+        //    return View();
+        //}
+
         [HttpPost]
-        public ActionResult commit()
-        {
-            return Json(new { success = false, });
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-        public bool nearbyCountry(int actualCountry, int nearCountry)
+        public ActionResult nearbyCountry(int actualCountry, int nearCountry)
         {
             bool verifyNearbyCountry = false;
 
@@ -297,8 +300,21 @@ namespace simplyRiskGame.Controllers
                     verifyNearbyCountry = false;
                     break;
             }
+            return Json(new { isNear = verifyNearbyCountry });
+        }
 
-            return verifyNearbyCountry;
+
+        [HttpPost]
+        /// <summary>
+        /// This method returns if the country belongs to the player.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="country"></param>
+        /// <returns></returns>
+        public ActionResult isTheCountryMine(int player, int country)
+        {
+
+            return Json(new { belongs = true });
         }
     }
 }

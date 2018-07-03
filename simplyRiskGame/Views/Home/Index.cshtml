@@ -1292,6 +1292,8 @@
         var enemyColor ='#0087FF';
         var troopLimit = @ViewBag.myTroopLimit;
         var troops;
+        var player =1;
+        var isAssignment = true;
         paintTroops(myColor,enemyColor);
 
 
@@ -1299,36 +1301,37 @@
             
             event.preventDefault();
             troopLimit = @ViewBag.IATroopLimit;
+            player = 2;
         });
 
 
         //alaska
         $("#alaska").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#alaskaText').text()) + 1;
-                $('#alaskaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 1)){
+                    troops = Number($('#alaskaText').text()) + 1;
+                    $('#alaskaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
-            //$.ajax({
-            //    url: "/Home/Alaska",
-            //    type: "POST",
-            //    data: {},
-            //    success: function (data) { }
-            //    });
         }).mouseover(function () {
             if ($('#zone').text() !== 'Alaska') { $("#zone").text('Alaska'); }
         });
 
         //alberta
         $("#alberta").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#albertaText').text()) + 1;
-                $('#albertaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 2)){
+                    troops = Number($('#albertaText').text()) + 1;
+                    $('#albertaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Alberta') { $("#zone").text('Alberta'); }
@@ -1336,12 +1339,15 @@
 
         //easternUnitedStated
         $("#easternUnitedStates").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#easternUnitedStatesText').text()) + 1;
-                $('#easternUnitedStatesText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 4)){
+                    troops = Number($('#easternUnitedStatesText').text()) + 1;
+                    $('#easternUnitedStatesText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Estados Unidos del Este') { $("#zone").text('Estados Unidos del Este'); }
@@ -1349,12 +1355,15 @@
 
         //groendlandia
         $("#groendlandia").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#groendlandiaText').text()) + 1;
-                $('#groendlandiaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 5)){
+                    troops = Number($('#groendlandiaText').text()) + 1;
+                    $('#groendlandiaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Groenlandia') { $("#zone").text('Groenlandia'); }
@@ -1362,12 +1371,15 @@
 
         //northeastTerritories
         $("#northeastTerritories").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#northeastTerritoriesText').text()) + 1;
-                $('#northeastTerritoriesText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 6)){
+                    troops = Number($('#northeastTerritoriesText').text()) + 1;
+                    $('#northeastTerritoriesText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Territorios del Noreste') { $("#zone").text('Territorios del Noreste'); }
@@ -1375,12 +1387,15 @@
 
         //northeastTerritories
         $("#ontario").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#ontarioText').text()) + 1;
-                $('#ontarioText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 7)){
+                    troops = Number($('#ontarioText').text()) + 1;
+                    $('#ontarioText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Ontario') { $("#zone").text('Ontario'); }
@@ -1388,12 +1403,15 @@
 
         //Quebec
         $("#quebec").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#quebecText').text()) + 1;
-                $('#quebecText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 8)){
+                    troops = Number($('#quebecText').text()) + 1;
+                    $('#quebecText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Quebec') { $("#zone").text('Quebec'); }
@@ -1401,38 +1419,31 @@
 
         //eUWest
         $("#eUWest").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#eUWestText').text()) + 1;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 9)){
+                    troops = Number($('#eUWestText').text()) + 1;
                 $('#eUWestText').text(troops);
                 troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Estados Unidos del Oeste') { $("#zone").text('Estados Unidos del Oeste'); }
         });
 
-        //eUWest
+        //Argentina
         $("#argentina").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#argentinaText').text()) + 1;
-                $('#argentinaText').text(troops);
-                troopLimit--;
-            }
-        }).mouseover(function () {
-            if ($('#zone').text() !== 'Argentina') { $("#zone").text('Argentina'); }
-        });
-
-        //eUWest
-        $("#argentina").click(function (event) {
-            
-            event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#argentinaText').text()) + 1;
-                $('#argentinaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 10)){
+                    troops = Number($('#argentinaText').text()) + 1;
+                    $('#argentinaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Argentina') { $("#zone").text('Argentina'); }
@@ -1440,12 +1451,15 @@
 
         //Brazil
         $("#brazil").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#brazilText').text()) + 1;
-                $('#brazilText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 11)){
+                    troops = Number($('#brazilText').text()) + 1;
+                    $('#brazilText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Brasil') { $("#zone").text('Brasil'); }
@@ -1454,12 +1468,15 @@
 
         //Peru
         $("#peru").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#peruText').text()) + 1;
-                $('#peruText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 12)){
+                    troops = Number($('#peruText').text()) + 1;
+                    $('#peruText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Peru') { $("#zone").text('Peru'); }
@@ -1467,12 +1484,15 @@
 
         //venezuela
         $("#venezuela").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#venezuelaText').text()) + 1;
-                $('#venezuelaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 13)){
+                    troops = Number($('#venezuelaText').text()) + 1;
+                    $('#venezuelaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Venezuela') { $("#zone").text('Venezuela'); }
@@ -1480,12 +1500,15 @@
 
         //congo
         $("#congo").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#congoText').text()) + 1;
-                $('#congoText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 14)){
+                    troops = Number($('#congoText').text()) + 1;
+                    $('#congoText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Congo') { $("#zone").text('Congo'); }
@@ -1493,12 +1516,15 @@
 
         //eastAfrica
         $("#eastAfrica").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#eastAfricaText').text()) + 1;
-                $('#eastAfricaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 15)){
+                    troops = Number($('#eastAfricaText').text()) + 1;
+                    $('#eastAfricaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Este de África') { $("#zone").text('Este de África'); }
@@ -1506,12 +1532,15 @@
 
         //Egipt
         $("#egipt").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#egiptText').text()) + 1;
-                $('#egiptText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 16)){
+                    troops = Number($('#egiptText').text()) + 1;
+                    $('#egiptText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Egipto') { $("#zone").text('Egipto'); }
@@ -1519,12 +1548,15 @@
 
         //Madagascar
         $("#madagascar").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#madagascarText').text()) + 1;
-                $('#madagascarText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 17)){
+                    troops = Number($('#madagascarText').text()) + 1;
+                    $('#madagascarText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Madagascar') { $("#zone").text('Madagascar'); }
@@ -1532,12 +1564,15 @@
 
         //southAfrica
         $("#southAfrica").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#southAfricaText').text()) + 1;
-                $('#southAfricaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 19)){
+                    troops = Number($('#southAfricaText').text()) + 1;
+                    $('#southAfricaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Sur de África') { $("#zone").text('Sur de África'); }
@@ -1545,12 +1580,15 @@
 
         //northAfrica
         $("#northAfrica").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#northAfricaText').text()) + 1;
-                $('#northAfricaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 18)){
+                    troops = Number($('#northAfricaText').text()) + 1;
+                    $('#northAfricaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Norte de África') { $("#zone").text('Norte de África'); }
@@ -1558,12 +1596,15 @@
 
         //grandBretaña
         $("#grandBretaña").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#grandBretañaText').text()) + 1;
-                $('#grandBretañaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 20)){
+                    troops = Number($('#grandBretañaText').text()) + 1;
+                    $('#grandBretañaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Gran Bretaña') { $("#zone").text('Gran Bretaña'); }
@@ -1571,12 +1612,15 @@
 
         //island
         $("#island").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#islandText').text()) + 1;
-                $('#islandText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 21)){
+                    troops = Number($('#islandText').text()) + 1;
+                    $('#islandText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Islandia') { $("#zone").text('Islandia'); }
@@ -1584,12 +1628,15 @@
 
         //polonia
         $("#northEurope").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#northEuropeText').text()) + 1;
-                $('#northEuropeText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 22)){
+                    troops = Number($('#northEuropeText').text()) + 1;
+                    $('#northEuropeText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Europa del Norte') { $("#zone").text('Europa del Norte'); }
@@ -1597,12 +1644,15 @@
 
         //escandinavia
         $("#escandinavia").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#escandinaviaText').text()) + 1;
-                $('#escandinaviaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 23)){
+                    troops = Number($('#escandinaviaText').text()) + 1;
+                    $('#escandinaviaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Escandinavia') { $("#zone").text('Escandinavia'); }
@@ -1610,12 +1660,15 @@
 
         //southEurope
         $("#southEurope").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#southEuropeText').text()) + 1;
-                $('#southEuropeText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 24)){
+                    troops = Number($('#southEuropeText').text()) + 1;
+                    $('#southEuropeText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Europa del Sur') { $("#zone").text('Europa del Sur'); }
@@ -1623,12 +1676,15 @@
 
         //ucrania
         $("#ucrania").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#ucraniaText').text()) + 1;
-                $('#ucraniaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 25)){
+                    troops = Number($('#ucraniaText').text()) + 1;
+                    $('#ucraniaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Ucrania') { $("#zone").text('Ucrania'); }
@@ -1636,12 +1692,15 @@
 
         //westernEurope
         $("#westernEurope").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#westernEuropeText').text()) + 1;
-                $('#westernEuropeText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 26)){
+                    troops = Number($('#westernEuropeText').text()) + 1;
+                    $('#westernEuropeText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Europa Oriental') { $("#zone").text('Europa Oriental'); }
@@ -1649,12 +1708,16 @@
 
         //afganistan
         $("#afganistan").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#afganistanText').text()) + 1;
-                $('#afganistanText').text(troops);
-                troopLimit--;
+
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 27)){
+                    troops = Number($('#afganistanText').text()) + 1;
+                    $('#afganistanText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Afganistan') { $("#zone").text('Afganistan'); }
@@ -1662,12 +1725,15 @@
 
         //China
         $("#china").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#chinaText').text()) + 1;
-                $('#chinaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 28)){
+                    troops = Number($('#chinaText').text()) + 1;
+                    $('#chinaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'China') { $("#zone").text('China'); }
@@ -1675,12 +1741,15 @@
 
         //india
         $("#india").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#indiaText').text()) + 1;
-                $('#indiaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 29)){
+                    troops = Number($('#indiaText').text()) + 1;
+                    $('#indiaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'India') { $("#zone").text('India'); }
@@ -1688,12 +1757,15 @@
 
         //irkutsk
         $("#irkutsk").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#irkutskText').text()) + 1;
-                $('#irkutskText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 30)){
+                    troops = Number($('#irkutskText').text()) + 1;
+                    $('#irkutskText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Irkutsk') { $("#zone").text('Irkutsk'); }
@@ -1701,12 +1773,15 @@
 
         //irkutsk
         $("#japan").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#japanText').text()) + 1;
-                $('#japanText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 3)){
+                    troops = Number($('#japanText').text()) + 1;
+                    $('#japanText').text(troops);
+                    troopLimit--;
+                }
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Japon') { $("#zone").text('Japon'); }
@@ -1714,12 +1789,15 @@
 
         //kamchatca
         $("#kamchatca").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#kamchatcaText').text()) + 1;
-                $('#kamchatcaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 32)){
+                    troops = Number($('#kamchatcaText').text()) + 1;
+                    $('#kamchatcaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Kamchatca') { $("#zone").text('Kamchatca'); }
@@ -1728,12 +1806,15 @@
 
         //middleEast
         $("#middleEast").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#middleEastText').text()) + 1;
-                $('#middleEastText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 33)){
+                    troops = Number($('#middleEastText').text()) + 1;
+                    $('#middleEastText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Oriente Medio') { $("#zone").text('Oriente Medio'); }
@@ -1741,12 +1822,15 @@
 
         //mongolia
         $("#mongolia").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#mongoliaText').text()) + 1;
-                $('#mongoliaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 34)){
+                    troops = Number($('#mongoliaText').text()) + 1;
+                    $('#mongoliaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Mongolia') { $("#zone").text('Mongolia'); }
@@ -1754,12 +1838,15 @@
 
         //slam
         $("#slam").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#slamText').text()) + 1;
-                $('#slamText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 35)){
+                    troops = Number($('#slamText').text()) + 1;
+                    $('#slamText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Slam') { $("#zone").text('Slam'); }
@@ -1767,12 +1854,15 @@
 
         //siberia
         $("#siberia").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#siberiaText').text()) + 1;
-                $('#siberiaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 36)){
+                    troops = Number($('#siberiaText').text()) + 1;
+                    $('#siberiaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Siberia') { $("#zone").text('Siberia'); }
@@ -1780,12 +1870,15 @@
 
         //ural
         $("#ural").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#uralText').text()) + 1;
-                $('#uralText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 37)){
+                    troops = Number($('#uralText').text()) + 1;
+                    $('#uralText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Ural') { $("#zone").text('Ural'); }
@@ -1793,12 +1886,15 @@
 
         //yakutska
         $("#yakutska").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#yakutskaText').text()) + 1;
-                $('#yakutskaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 38)){
+                    troops = Number($('#yakutskaText').text()) + 1;
+                    $('#yakutskaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Yakutska') { $("#zone").text('Yakutska'); }
@@ -1806,12 +1902,15 @@
 
         //easternAustralia
         $("#easternAustralia").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#easternAustraliaText').text()) + 1;
-                $('#easternAustraliaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 39)){
+                    troops = Number($('#easternAustraliaText').text()) + 1;
+                    $('#easternAustraliaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Australia Oriental') { $("#zone").text('Australia Oriental'); }
@@ -1819,12 +1918,15 @@
 
         //indonesia
         $("#indonesia").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#indonesiaText').text()) + 1;
-                $('#indonesiaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 40)){
+                    troops = Number($('#indonesiaText').text()) + 1;
+                    $('#indonesiaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Indonesia') { $("#zone").text('Indonesia'); }
@@ -1832,12 +1934,15 @@
 
         //nuevaGuinea
         $("#nuevaGuinea").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#nuevaGuineaText').text()) + 1;
-                $('#nuevaGuineaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 41)){
+                    troops = Number($('#nuevaGuineaText').text()) + 1;
+                    $('#nuevaGuineaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Nueva Guinea') { $("#zone").text('Nueva Guinea'); }
@@ -1845,12 +1950,15 @@
 
         //westerbAustralia
         $("#westerbAustralia").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#westerbAustraliaText').text()) + 1;
-                $('#westerbAustraliaText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 42)){
+                    troops = Number($('#westerbAustraliaText').text()) + 1;
+                    $('#westerbAustraliaText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'Australia del Oeste') { $("#zone").text('Australia del Oeste'); }
@@ -1858,12 +1966,15 @@
 
         //mexico
         $("#mexico").click(function (event) {
-            
             event.preventDefault();
-            if(troopLimit>0){
-                troops = Number($('#mexicoText').text()) + 1;
-                $('#mexicoText').text(troops);
-                troopLimit--;
+            if(isAssignment){
+                if(troopLimit>0 && countryBelongsPlayer(player, 3)){
+                    troops = Number($('#mexicoText').text()) + 1;
+                    $('#mexicoText').text(troops);
+                    troopLimit--;
+                }else{ if(troopLimit<=0){isAssignment = false;}}
+            }else{
+                //it is a movement
             }
         }).mouseover(function () {
             if ($('#zone').text() !== 'México') { $("#zone").text('México'); }
@@ -2062,5 +2173,16 @@
         enemyTroops.forEach(function(troop) {
             $(equivalences[troop].circle).css({ fill: enemyColor });
         });
+    }
+
+    function countryBelongsPlayer(player_, country_){
+        $.ajax({
+            url: "/Home/isTheCountryMine",
+            type: "POST",
+            data: { player:player_, country:country_},
+            success: function (data) {
+                return data.belongs;
+            }
+            });
     }
 </script>
