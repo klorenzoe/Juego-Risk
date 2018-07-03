@@ -300,5 +300,67 @@ namespace simplyRiskGame.Controllers
 
             return verifyNearbyCountry;
         }
+
+        public int[] initialCountries()
+        {
+            int number = 0;
+            int countryNumberPlayer = 0;
+            int countryNumberIA = 0;
+            Random random = new Random();
+            number = random.Next(3, 5);
+
+            //ARRAY WITH THE INITIAL COUNTRIES FOR THE PLAYER
+            int[] countriesPlayer = new int[number];
+
+            countryNumberPlayer = random.Next(1, 42);
+            countriesPlayer[0] = countryNumberPlayer;
+
+            for (int i = 1; i < number; i++)
+            {
+                int temp = 0;
+                temp = random.Next(1, 42);
+                if (nearbyCountry(countryNumberPlayer, temp) == true && !countriesPlayer.Contains(temp))
+                {
+                    countriesPlayer[i] = temp;
+                }
+                else
+                {
+                    i--;
+                }
+            }
+
+            //ARRAY WITH THE INITITAL COUNTRIES FOR THE IA
+            int[] countriesIA = new int[number];
+
+            countryNumberIA = random.Next(1, 42);
+            countriesIA[0] = countryNumberPlayer;
+            countriesIA[0] = 0;
+            while (countriesIA[0] == 0)
+            {
+                if (!countriesPlayer.Contains(countryNumberIA))
+                {
+                    countriesIA[0] = countryNumberIA;
+                }
+                else
+                {
+                    countriesIA[0] = 0;
+                }
+            }
+            for (int i = 1; i < number; i++)
+            {
+                int temp = 0;
+                temp = random.Next(1, 42);
+                if (nearbyCountry(countryNumberIA, temp) == true && !countriesPlayer.Contains(temp) && !countriesIA.Contains(temp))
+                {
+                    countriesIA[i] = temp;
+                }
+                else
+                {
+                    i--;
+                }
+            }
+
+            return countriesPlayer;
+        }
     }
 }
