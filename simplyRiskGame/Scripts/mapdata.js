@@ -903,8 +903,8 @@ var simplemaps_worldmap_mapdata={
       name: "Yakutsk"
     },
     "37": {
-      lat: "-33.8667,",
-      lng: "151.2",
+      lat: "-30",
+      lng: "120.2",
       name: "Australia Oriental"
     },
     "38": {
