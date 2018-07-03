@@ -36,9 +36,27 @@ namespace simplyRiskGame.Controllers
 
         //    return View();
         //}
+        [HttpPost]
+        /// <summary>
+        /// This method returns if the country belongs to the player.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="country"></param>
+        /// <returns></returns>
+        public ActionResult isTheCountryMine(int player, int country)
+        {
+
+            return Json(new { belongs = true });
+        }
+
 
         [HttpPost]
-        public ActionResult nearbyCountry(int actualCountry, int nearCountry)
+        public ActionResult nearbyCountryJson(int actualCountry, int nearCountry)
+        {
+            return Json(new { isNear = nearbyCountry(actualCountry, nearCountry) });
+        }
+
+        private bool nearbyCountry(int actualCountry, int nearCountry)
         {
             bool verifyNearbyCountry = false;
 
@@ -300,21 +318,70 @@ namespace simplyRiskGame.Controllers
                     verifyNearbyCountry = false;
                     break;
             }
-            return Json(new { isNear = verifyNearbyCountry });
+
+            return verifyNearbyCountry;
         }
 
-
-        [HttpPost]
-        /// <summary>
-        /// This method returns if the country belongs to the player.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="country"></param>
-        /// <returns></returns>
-        public ActionResult isTheCountryMine(int player, int country)
+        public int[] initialCountries()
         {
+            int number = 0;
+            int countryNumberPlayer = 0;
+            int countryNumberIA = 0;
+            Random random = new Random();
+            number = random.Next(3, 5);
 
-            return Json(new { belongs = true });
+            //ARRAY WITH THE INITIAL COUNTRIES FOR THE PLAYER
+            int[] countriesPlayer = new int[number];
+
+            countryNumberPlayer = random.Next(1, 42);
+            countriesPlayer[0] = countryNumberPlayer;
+
+            for (int i = 1; i < number; i++)
+            {
+                int temp = 0;
+                temp = random.Next(1, 42);
+                if (nearbyCountry(countryNumberPlayer, temp) == true && !countriesPlayer.Contains(temp))
+                {
+                    countriesPlayer[i] = temp;
+                }
+                else
+                {
+                    i--;
+                }
+            }
+
+            //ARRAY WITH THE INITITAL COUNTRIES FOR THE IA
+            int[] countriesIA = new int[number];
+
+            countryNumberIA = random.Next(1, 42);
+            countriesIA[0] = countryNumberPlayer;
+            countriesIA[0] = 0;
+            while (countriesIA[0] == 0)
+            {
+                if (!countriesPlayer.Contains(countryNumberIA))
+                {
+                    countriesIA[0] = countryNumberIA;
+                }
+                else
+                {
+                    countriesIA[0] = 0;
+                }
+            }
+            for (int i = 1; i < number; i++)
+            {
+                int temp = 0;
+                temp = random.Next(1, 42);
+                if (nearbyCountry(countryNumberIA, temp) == true && !countriesPlayer.Contains(temp) && !countriesIA.Contains(temp))
+                {
+                    countriesIA[i] = temp;
+                }
+                else
+                {
+                    i--;
+                }
+            }
+
+            return countriesPlayer;
         }
     }
 }
