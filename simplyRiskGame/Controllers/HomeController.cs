@@ -384,5 +384,29 @@ namespace simplyRiskGame.Controllers
 
             return Json(new { enemy = countriesIA, player = countriesPlayer });
         }
+
+        [HttpPost]
+        public ActionResult troopsAssign(int troopsAmount)
+        {
+            int[] troops;
+            if (troopsAmount == 0)
+            {
+                troops = new int[1];
+                troops[0] = 0;
+            }
+            else
+            {
+                troops = new int[troopsAmount + 1];
+                troops[0] = troopsAmount;
+                int temp = troopsAmount - 1;
+                for (int i = 1; i < troops.Length; i++)
+                {
+                    troops[i] = temp;
+                    temp = temp - 1;
+                }
+            }
+
+            return Json(new { troopsOptions = troops });
+        }
     }
 }
