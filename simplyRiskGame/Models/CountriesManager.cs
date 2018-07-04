@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Dijkstra.NET.Contract;
+using Dijkstra.NET.Model;
+using Dijkstra.NET.ShortestPath;
 
 namespace simplyRiskGame.Models
 {
@@ -85,5 +88,23 @@ namespace simplyRiskGame.Models
             return t;
         }
 
+        #region Dijkstra
+        public int CalulateDistanceDijkstra(int OriginCountry, int targetCountry)
+        {
+            var graph = new Graph<int, string>();
+            for (int i = 1; i <= Countries.Count(); i++)
+                graph.AddNode(i);
+            for (int i = 1; i <= Countries.Count(); i++)
+            {
+                for (int j = 0; j < Countries[i].Neighborsint.Count(); j++)
+                {
+                    graph.Connect(Convert.ToUInt16(i), Convert.ToUInt16(Countries[i].Neighborsint[j]), Countries[Countries[i].Neighborsint[j]].TroopsCount, "fuck yeah");
+                }
+            }
+            var dijkstra = new Dijkstra<int, string>(graph);
+            IShortestPathResult result = dijkstra.Process(Convert.ToUInt16(OriginCountry), Convert.ToUInt16(targetCountry)); //result contains the shortest path
+            return result.Distance;
+        }
+        #endregion
     }
 }

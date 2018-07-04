@@ -23,6 +23,7 @@ namespace simplyRiskGame.Models
         {
             CountryName = name;
             CountryID = id;
+            TroopsCount = 2;
 
             neighbors.Sort();
             Neighborsint = neighbors;
