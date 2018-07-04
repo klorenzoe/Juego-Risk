@@ -11,6 +11,7 @@ namespace simplyRiskGame.Models
     public class CountriesManager
     {
         public Dictionary<int, Country> Countries = new Dictionary<int, Country>();
+        public Graph<int,string> CountriesGraph = new Graph<int, string>();
         public void FillMap()
         {   //North America
             Countries.Add(1, new Country("Alaska", 1, new List<int> { 6, 2, 32 }));
@@ -65,6 +66,8 @@ namespace simplyRiskGame.Models
             {
                 Countries[i].setNeighbors(setNeighborsCM(Countries[i]));
             }
+
+            SetCountriesGraph();
         }
         // List<int>
         public List<Country> setNeighborsCM(Country C)
@@ -89,19 +92,22 @@ namespace simplyRiskGame.Models
         }
 
         #region Dijkstra
-        public int CalulateDistanceDijkstra(int OriginCountry, int targetCountry)
+        public void SetCountriesGraph()
         {
-            var graph = new Graph<int, string>();
             for (int i = 1; i <= Countries.Count(); i++)
-                graph.AddNode(i);
+                CountriesGraph.AddNode(i);
             for (int i = 1; i <= Countries.Count(); i++)
             {
                 for (int j = 0; j < Countries[i].Neighborsint.Count(); j++)
                 {
-                    graph.Connect(Convert.ToUInt16(i), Convert.ToUInt16(Countries[i].Neighborsint[j]), Countries[Countries[i].Neighborsint[j]].TroopsCount, "fuck yeah");
+                    CountriesGraph.Connect(Convert.ToUInt16(i), Convert.ToUInt16(Countries[i].Neighborsint[j]), Countries[Countries[i].Neighborsint[j]].TroopsCount, "fuck yeah");
                 }
             }
-            var dijkstra = new Dijkstra<int, string>(graph);
+        }
+
+        public int CalulateDistanceDijkstra(int OriginCountry, int targetCountry)
+        {   
+            var dijkstra = new Dijkstra<int, string>(CountriesGraph);
             IShortestPathResult result = dijkstra.Process(Convert.ToUInt16(OriginCountry), Convert.ToUInt16(targetCountry)); //result contains the shortest path
             return result.Distance;
         }
