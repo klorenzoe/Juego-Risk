@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using simplyRiskGame.Models;
 
 namespace simplyRiskGame.Controllers
 {
@@ -15,27 +16,47 @@ namespace simplyRiskGame.Controllers
             return View();
         }
 
-        //this methods are called with ajax
+        ////this methods are called with ajax
+        //[HttpPost]
+        //public ActionResult commit()
+        //{
+        //    return Json(new { success = false, });
+        //}
+
+        //public ActionResult About()
+        //{
+        //    ViewBag.Message = "Your application description page.";
+
+        //    return View();
+        //}
+
+        //public ActionResult Contact()
+        //{
+        //    ViewBag.Message = "Your contact page.";
+
+        //    return View();
+        //}
         [HttpPost]
-        public ActionResult commit()
+        /// <summary>
+        /// This method returns if the country belongs to the player.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="country"></param>
+        /// <returns></returns>
+        public ActionResult isTheCountryMine(int player, int country)
         {
-            return Json(new { success = false, });
+
+            return Json(new { belongs = true });
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
 
-            return View();
+        [HttpPost]
+        public ActionResult nearbyCountryJson(int actualCountry, int nearCountry)
+        {
+            return Json(new { isNear = nearbyCountry(actualCountry, nearCountry) });
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
-        public bool nearbyCountry(int actualCountry, int nearCountry)
+        private bool nearbyCountry(int actualCountry, int nearCountry)
         {
             bool verifyNearbyCountry = false;
 
