@@ -1364,7 +1364,7 @@
         var troops;
         var player =1;
         var isAssignment = true;
-        paintTroops(myColor,enemyColor);
+        paintInitialTroops(myColor,enemyColor);
 
 
         $('#IATurn').click(function (event) {
@@ -2235,17 +2235,27 @@
 </script>
 
 <script type="text/javascript">
-    function paintTroops(myColor, enemyColor){
-        var myTroops = [1,2,3];
-        var enemyTroops = [30,38,32];
+    function paintInitialTroops(myColor, enemyColor){
 
-        myTroops.forEach(function(troop) {
-            $(equivalences[troop].circle).css({ fill: myColor });
-        });
+        $.ajax({
+            url: "/Home/initialCountries",
+            type: "POST",
+            data: { },
+            success: function (data) {
+                data.enemy.forEach(function(troop) {
+                    $(equivalences[troop].circle).css({ fill: enemyColor });
+                });
 
-        enemyTroops.forEach(function(troop) {
-            $(equivalences[troop].circle).css({ fill: enemyColor });
+                data.player.forEach(function(troop) {
+                    $(equivalences[troop].circle).css({ fill: myColor });
+                });
+            }
         });
+    }
+
+    function paintOneTroop(player, countryid){
+        if(player==1){ $(equivalences[countryid].circle).css({ fill: myColor });}
+        if(player==2){ $(equivalences[countryid].circle).css({ fill: enemyColor  });}
     }
 
     function countryBelongsPlayer(player_, country_){
