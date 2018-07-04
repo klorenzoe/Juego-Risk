@@ -7,11 +7,54 @@
     <script src="~/Scripts/mapdata.js"></script>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <link href="~/Content/mapStyle.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .dropbtn:hover, .dropbtn:focus {
+                background-color: #2980B9;
+            }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
 
 </head>
 <body style="position: static;">
-    <h3 id="zone"></h3>
-    <br />
     <div id="map">
         <div id="map_holder" style="position: relative; width: 1503px;">
             <div id="map_zoom" style="position: absolute; z-index: 1;"></div>
@@ -26,7 +69,7 @@
                 </svg>
             </div>
             <div id="map_inner" style="position: relative;">
-                <svg height="620" version="1.1" width="1503" xmlns="http://www.w3.org/2000/svg" style="overflow: hidden; position: relative; top: -0.475px;"
+                <svg height="590" version="1.1" width="1503" xmlns="http://www.w3.org/2000/svg" style="overflow: hidden; position: relative; top: -0.475px;"
                      viewBox="0.745688800792978 0.7456888007928643 1520 650.4590683845393" preserveAspectRatio="xMinYMin">
                     <rect x="-4035.01" y="-1726.15" width="10090" height="4317.85" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" transform="matrix(0.7532,0,0,0.7532,0,0)"
                           stroke-width="1.3426480372588157" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); fill-opacity: 0;" fill-opacity="0"></rect>
@@ -1278,6 +1321,33 @@
                         </text>
                     </svg>
                 </div>
+
+                <div style="background-color:#71E8AB">
+                    <br />
+                    <div align="center">
+                        <text>Ataque - Desplazos</text>
+                        <select id="country1">
+                            <option>New York </option>
+                            <option>Bucharest</option>
+                            <option>Madrid</option>
+                        </select>
+                        <text>a</text>
+                        <select id="country2">
+                            <option>New York </option>
+                            <option>Bucharest</option>
+                            <option>Madrid</option>
+                        </select>
+
+                        <text>Número de tropas</text>
+                        <select id="NumTroops">
+                            <option>0</option>
+                            <option>1</option>
+                            <option>2</option>
+                        </select>
+                        <button class="btn"><i class="fa fa-arrow-circle-o-right" style="font-size:24px"></i>Save</button>
+                    </div>
+                    <br />
+                </div>
             </div>
         </div>
     </div>
@@ -1302,6 +1372,7 @@
             event.preventDefault();
             troopLimit = @ViewBag.IATroopLimit;
             player = 2;
+            isAssignment = true;
         });
 
 
@@ -2161,7 +2232,9 @@
             "text":"#westerbAustraliaText"
         }
     }
+</script>
 
+<script type="text/javascript">
     function paintTroops(myColor, enemyColor){
         var myTroops = [1,2,3];
         var enemyTroops = [30,38,32];
@@ -2183,6 +2256,11 @@
             success: function (data) {
                 return data.belongs;
             }
-            });
+        });
+    }
+    function returnTroops(player){
+    }
+
+    function nearCountries(country){
     }
 </script>
