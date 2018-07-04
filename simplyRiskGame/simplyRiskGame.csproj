@@ -152,6 +152,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CountriesManager.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\PlayerConquest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -46,5 +46,10 @@ namespace simplyRiskGame.Models
             }
             return t;
         }
+
+        public List<int> getNeighborsIDs()
+        {
+            return Neighborsint;
+        }
     }
 }
