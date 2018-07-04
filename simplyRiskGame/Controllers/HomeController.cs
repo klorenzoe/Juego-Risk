@@ -322,7 +322,8 @@ namespace simplyRiskGame.Controllers
             return verifyNearbyCountry;
         }
 
-        public int[] initialCountries()
+        [HttpPost]
+        public ActionResult initialCountries()
         {
             int number = 0;
             int countryNumberPlayer = 0;
@@ -381,7 +382,7 @@ namespace simplyRiskGame.Controllers
                 }
             }
 
-            return countriesPlayer;
+            return Json(new { enemy = countriesIA, player = countriesPlayer });
         }
     }
 }
