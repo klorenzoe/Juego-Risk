@@ -11,6 +11,7 @@ namespace simplyRiskGame.Controllers
     {
         public ActionResult Index()
         {
+            
             ViewBag.myTroopLimit = 10;
             ViewBag.IATroopLimit = 10;
             return View();
