@@ -19,10 +19,13 @@ namespace simplyRiskGame.Models
         public List<Country> Neighbors = new List<Country>();
         public List<int> Neighborsint = new List<int>();
 
+        Random rnd = new Random();
+
         public Country(String name, int id, List<int> neighbors)
         {
             CountryName = name;
             CountryID = id;
+            TroopsCount = rnd.Next(2,5);
 
             neighbors.Sort();
             Neighborsint = neighbors;
@@ -45,6 +48,11 @@ namespace simplyRiskGame.Models
                     t[2] = +Neighbors[i].TroopsCount;
             }
             return t;
+        }
+
+        public List<int> getNeighborsIDs()
+        {
+            return Neighborsint;
         }
     }
 }
