@@ -368,3 +368,5 @@ C:\Users\DELL\Desktop\Juego-Risk\simplyRiskGame\obj\Debug\simplyRiskGame.dll
 C:\Users\DELL\Desktop\Juego-Risk\simplyRiskGame\obj\Debug\simplyRiskGame.pdb
 D:\GitHub\Juego-Risk\simplyRiskGame\bin\Dijkstra.NET.dll
 D:\GitHub\Juego-Risk\simplyRiskGame\bin\Dijkstra.NET.xml
+C:\Users\usuario\Desktop\Mis proyectos\Machine Learning\Juego-Risk\simplyRiskGame\bin\Dijkstra.NET.dll
+C:\Users\usuario\Desktop\Mis proyectos\Machine Learning\Juego-Risk\simplyRiskGame\bin\Dijkstra.NET.xml

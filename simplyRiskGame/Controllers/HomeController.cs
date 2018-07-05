@@ -9,61 +9,27 @@ namespace simplyRiskGame.Controllers
 {
     public class HomeController : Controller
     {
+        CountriesManager manager = new CountriesManager();
+
+        HomeController() {
+            manager.FillMap();     
+        }
         public ActionResult Index()
         {
+            
             ViewBag.myTroopLimit = 10;
             ViewBag.IATroopLimit = 10;
             return View();
-        }
-
-        ////this methods are called with ajax
-        //[HttpPost]
-        //public ActionResult commit()
-        //{
-        //    return Json(new { success = false, });
-        //}
-
-        //public ActionResult About()
-        //{
-        //    ViewBag.Message = "Your application description page.";
-
-        //    return View();
-        //}
-
-        //public ActionResult Contact()
-        //{
-        //    ViewBag.Message = "Your contact page.";
-
-        //    return View();
-        //}
-        [HttpPost]
-        /// <summary>
-        /// This method returns if the country belongs to the player.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="country"></param>
-        /// <returns></returns>
-        public ActionResult isTheCountryMine(int player, int country)
-        {
-
-            return Json(new { belongs = true });
-        }
-
-
-        [HttpPost]
-        public ActionResult nearbyCountryJson(int actualCountry, int nearCountry)
-        {
-            return Json(new { isNear = nearbyCountry(actualCountry, nearCountry) });
         }
 
         private bool nearbyCountry(int actualCountry, int nearCountry)
         {
             bool verifyNearbyCountry = false;
 
-            switch(actualCountry)
+            switch (actualCountry)
             {
                 case 1:
-                    if(nearCountry == 2 || nearCountry == 6 || nearCountry == 32)
+                    if (nearCountry == 2 || nearCountry == 6 || nearCountry == 32)
                     {
                         verifyNearbyCountry = true;
                     }
@@ -322,6 +288,26 @@ namespace simplyRiskGame.Controllers
             return verifyNearbyCountry;
         }
 
+
+        [HttpPost]
+        /// <summary>
+        /// This method returns if the country belongs to the player.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="country"></param>
+        /// <returns></returns>
+        public ActionResult isTheCountryMine(int player, int country)
+        {
+            bool response = manager.Countries[country].Owner == player;
+            return Json(new { belongs = response });
+        }
+
+        [HttpPost]
+        public ActionResult nearbyCountryJson(int actualCountry, int nearCountry)
+        {
+            return Json(new { isNear = nearbyCountry(actualCountry, nearCountry) });
+        }
+
         [HttpPost]
         public ActionResult initialCountries()
         {
@@ -384,5 +370,39 @@ namespace simplyRiskGame.Controllers
 
             return Json(new { enemy = countriesIA, player = countriesPlayer });
         }
+
+        [HttpPost]
+        public ActionResult troopsAssign(int troopsAmount)
+        {
+            int[] troops;
+            if (troopsAmount == 0)
+            {
+                troops = new int[1];
+                troops[0] = 0;
+            }
+            else
+            {
+                troops = new int[troopsAmount + 1];
+                troops[0] = troopsAmount;
+                int temp = troopsAmount - 1;
+                for (int i = 1; i < troops.Length; i++)
+                {
+                    troops[i] = temp;
+                    temp = temp - 1;
+                }
+            }
+
+            return Json(new { troopsOptions = troops });
+        }
+
+
+
+        /*
+         *1) llenar los países Iniciales y neutros de tropas iniciales. (Yulisa)
+          2) Desbloquear la barra(Sebas)
+          3) Cuadrito que diga cuantas tropas tengo disponibles. (Oso)
+          4)
+
+         */
     }
 }
