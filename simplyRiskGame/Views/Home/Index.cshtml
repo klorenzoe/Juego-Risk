@@ -1378,8 +1378,9 @@
         //alaska
         $("#alaska").click(function (event) {
             event.preventDefault();
+            debugger;
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 1)){
+                if(troopLimit>0){
                     troops = Number($('#alaskaText').text()) + 1;
                     $('#alaskaText').text(troops);
                     troopLimit--;
@@ -1395,7 +1396,7 @@
         $("#alberta").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 2)){
+                if(troopLimit>0){
                     troops = Number($('#albertaText').text()) + 1;
                     $('#albertaText').text(troops);
                     troopLimit--;
@@ -2051,13 +2052,10 @@
         });
 
 
-
-
-
-
-
     });
 </script>
+
+
 
 <script type="text/javascript">
     var equivalences = 
@@ -2239,7 +2237,7 @@
         $.ajax({
             url: "/Home/initialCountries",
             type: "POST",
-            data: { },
+            data: {},
             success: function (data) {
                 data.enemy.forEach(function(troop) {
                     $(equivalences[troop].circle).css({ fill: enemyColor });
@@ -2263,6 +2261,7 @@
             type: "POST",
             data: { player:player_, country:country_},
             success: function (data) {
+                debugger;
                 return data.belongs;
             }
         });
