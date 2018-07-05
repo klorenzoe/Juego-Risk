@@ -1322,10 +1322,10 @@
                     </svg>
                 </div>
 
-                <div style="background-color:#71E8AB">
+                <div style="background-color:#F2B035">
                     <br />
-                    <div align="center">
-                        <text>Ataque - Desplazos</text>
+                    <div align="center" style="font-family:Algerian">
+                        <text class="col-md-12">Ataque - Desplazos</text>
                         <select id="country1">
                             <option>New York </option>
                             <option>Bucharest</option>
@@ -1344,7 +1344,7 @@
                             <option>1</option>
                             <option>2</option>
                         </select>
-                        <button class="btn"><i class="fa fa-arrow-circle-o-right" style="font-size:24px"></i>Save</button>
+                        <small> <button class="btn" style="background-color:#FF225A"><i class="fa fa-arrow-circle-o-right" style="font-size:24px; color:white"> </i> <text style="color:white"></text></button></small>
                     </div>
                     <br />
                 </div>
@@ -1364,8 +1364,7 @@
         var troops;
         var player =1;
         var isAssignment = true;
-        paintTroops(myColor,enemyColor);
-
+        paintInitialTroops(myColor,enemyColor);
 
         $('#IATurn').click(function (event) {
             
@@ -1379,8 +1378,9 @@
         //alaska
         $("#alaska").click(function (event) {
             event.preventDefault();
+            debugger;
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 1)){
+                if(troopLimit>0){
                     troops = Number($('#alaskaText').text()) + 1;
                     $('#alaskaText').text(troops);
                     troopLimit--;
@@ -1396,7 +1396,7 @@
         $("#alberta").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 2)){
+                if(troopLimit>0){
                     troops = Number($('#albertaText').text()) + 1;
                     $('#albertaText').text(troops);
                     troopLimit--;
@@ -2052,13 +2052,10 @@
         });
 
 
-
-
-
-
-
     });
 </script>
+
+
 
 <script type="text/javascript">
     var equivalences = 
@@ -2235,17 +2232,27 @@
 </script>
 
 <script type="text/javascript">
-    function paintTroops(myColor, enemyColor){
-        var myTroops = [1,2,3];
-        var enemyTroops = [30,38,32];
+    function paintInitialTroops(myColor, enemyColor){
 
-        myTroops.forEach(function(troop) {
-            $(equivalences[troop].circle).css({ fill: myColor });
-        });
+        $.ajax({
+            url: "/Home/initialCountries",
+            type: "POST",
+            data: {},
+            success: function (data) {
+                data.enemy.forEach(function(troop) {
+                    $(equivalences[troop].circle).css({ fill: enemyColor });
+                });
 
-        enemyTroops.forEach(function(troop) {
-            $(equivalences[troop].circle).css({ fill: enemyColor });
+                data.player.forEach(function(troop) {
+                    $(equivalences[troop].circle).css({ fill: myColor });
+                });
+            }
         });
+    }
+
+    function paintOneTroop(player, countryid){
+        if(player==1){ $(equivalences[countryid].circle).css({ fill: myColor });}
+        if(player==2){ $(equivalences[countryid].circle).css({ fill: enemyColor  });}
     }
 
     function countryBelongsPlayer(player_, country_){
@@ -2254,6 +2261,7 @@
             type: "POST",
             data: { player:player_, country:country_},
             success: function (data) {
+                debugger;
                 return data.belongs;
             }
         });

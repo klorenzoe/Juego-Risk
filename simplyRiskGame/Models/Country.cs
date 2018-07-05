@@ -8,10 +8,9 @@ namespace simplyRiskGame.Models
     public class Country
     {
         //public string name { get; set; }
-
         //public int number { get; set; }
-
         //public List<Country> adjacentCountries { get; set; }
+
         public string CountryName { get; set; }
         public int CountryID { get; set; }
         public int TroopsCount { get; set; }
@@ -41,11 +40,11 @@ namespace simplyRiskGame.Models
             for (int i = 0; i < Neighbors.Count(); i++)
             {
                 if (Neighbors[i].Owner == 0)
-                    t[0] = +Neighbors[i].TroopsCount;
+                    t[0] = + Neighbors[i].TroopsCount;
                 else if (Neighbors[i].Owner == 1)
-                    t[1] = +Neighbors[i].TroopsCount;
+                    t[1] = + Neighbors[i].TroopsCount;
                 else
-                    t[2] = +Neighbors[i].TroopsCount;
+                    t[2] = + Neighbors[i].TroopsCount;
             }
             return t;
         }
