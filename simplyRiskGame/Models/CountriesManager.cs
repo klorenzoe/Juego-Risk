@@ -62,14 +62,18 @@ namespace simplyRiskGame.Models
             Countries.Add(41, new Country("Nueva Guinea", 41, new List<int> { 39, 40, 42 }));
             Countries.Add(42, new Country("Australia Occidental", 42, new List<int> { 40, 41, 39 }));
 
-            for (int i = 1; i <= Countries.Count(); i++)
+            UpdateCountriesList();
+            SetCountriesGraph();
+        }
+
+        public void UpdateCountriesList()
+        {
+            for (int i = 1; i <= Countries.Count(); i++)//update countries list
             {
                 Countries[i].setNeighbors(setNeighborsCM(Countries[i]));
             }
-
-            SetCountriesGraph();
         }
-        // List<int>
+
         public List<Country> setNeighborsCM(Country C)
         {
             List<Country> t = new List<Country>();

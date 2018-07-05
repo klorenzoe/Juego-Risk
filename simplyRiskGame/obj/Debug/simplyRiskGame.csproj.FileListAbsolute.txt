@@ -366,3 +366,5 @@ C:\Users\DELL\Desktop\Juego-Risk\simplyRiskGame\bin\Microsoft.CodeDom.Providers.
 C:\Users\DELL\Desktop\Juego-Risk\simplyRiskGame\obj\Debug\simplyRiskGame.csprojResolveAssemblyReference.cache
 C:\Users\DELL\Desktop\Juego-Risk\simplyRiskGame\obj\Debug\simplyRiskGame.dll
 C:\Users\DELL\Desktop\Juego-Risk\simplyRiskGame\obj\Debug\simplyRiskGame.pdb
+D:\GitHub\Juego-Risk\simplyRiskGame\bin\Dijkstra.NET.dll
+D:\GitHub\Juego-Risk\simplyRiskGame\bin\Dijkstra.NET.xml
