@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Dijkstra.NET.Contract;
+using Dijkstra.NET.Model;
+using Dijkstra.NET.ShortestPath;
 
 namespace simplyRiskGame.Models
 {
     public class CountriesManager
     {
         public Dictionary<int, Country> Countries = new Dictionary<int, Country>();
+        public Graph<int,string> CountriesGraph = new Graph<int, string>();
         public void FillMap()
         {   //North America
             Countries.Add(1, new Country("Alaska", 1, new List<int> { 6, 2, 32 }));
@@ -58,12 +62,18 @@ namespace simplyRiskGame.Models
             Countries.Add(41, new Country("Nueva Guinea", 41, new List<int> { 39, 40, 42 }));
             Countries.Add(42, new Country("Australia Occidental", 42, new List<int> { 40, 41, 39 }));
 
-            for (int i = 1; i <= Countries.Count(); i++)
+            UpdateCountriesList();
+            SetCountriesGraph();
+        }
+
+        public void UpdateCountriesList()
+        {
+            for (int i = 1; i <= Countries.Count(); i++)//update countries list
             {
                 Countries[i].setNeighbors(setNeighborsCM(Countries[i]));
             }
         }
-        // List<int>
+
         public List<Country> setNeighborsCM(Country C)
         {
             List<Country> t = new List<Country>();
@@ -85,5 +95,26 @@ namespace simplyRiskGame.Models
             return t;
         }
 
+        #region Dijkstra
+        public void SetCountriesGraph()
+        {
+            for (int i = 1; i <= Countries.Count(); i++)
+                CountriesGraph.AddNode(i);
+            for (int i = 1; i <= Countries.Count(); i++)
+            {
+                for (int j = 0; j < Countries[i].Neighborsint.Count(); j++)
+                {
+                    CountriesGraph.Connect(Convert.ToUInt16(i), Convert.ToUInt16(Countries[i].Neighborsint[j]), Countries[Countries[i].Neighborsint[j]].TroopsCount, "fuck yeah");
+                }
+            }
+        }
+
+        public int CalulateDistanceDijkstra(int OriginCountry, int targetCountry)
+        {   
+            var dijkstra = new Dijkstra<int, string>(CountriesGraph);
+            IShortestPathResult result = dijkstra.Process(Convert.ToUInt16(OriginCountry), Convert.ToUInt16(targetCountry)); //result contains the shortest path
+            return result.Distance;
+        }
+        #endregion
     }
 }
