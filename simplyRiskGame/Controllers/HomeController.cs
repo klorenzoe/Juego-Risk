@@ -394,6 +394,15 @@ namespace simplyRiskGame.Controllers
         }
 
         [HttpPost]
+        public ActionResult getNewTroops(string _data)// ID, Troops count
+        {
+            string[] temp = _data.Split('|');
+            manager.Countries[Convert.ToInt16(temp[0])].TroopsCount = Convert.ToInt16(temp[1]);
+
+            return Json(new { something = true });
+        }
+
+        [HttpPost]
         public ActionResult troopsAssign(int troopsAmount)
         {
             int[] troops;
