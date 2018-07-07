@@ -9,16 +9,16 @@ namespace simplyRiskGame.Controllers
 {
     public class HomeController : Controller
     {
-        CountriesManager manager = new CountriesManager();
+        public CountriesManager manager = new CountriesManager();
 
-        HomeController() {
-            manager.FillMap();     
+        public HomeController() {
+            manager.FillMap();
         }
         public ActionResult Index()
         {
             
-            ViewBag.myTroopLimit = 10;
-            ViewBag.IATroopLimit = 10;
+            ViewBag.myTroopLimit = 5;
+            ViewBag.IATroopLimit = 5;
             return View();
         }
 
@@ -399,8 +399,8 @@ namespace simplyRiskGame.Controllers
 
         /*
          *1) llenar los países Iniciales y neutros de tropas iniciales. (Yulisa)
-          2) Desbloquear la barra(Sebas)
-          3) Cuadrito que diga cuantas tropas tengo disponibles. (Oso)
+          2) Desbloquear la barra(Sebas)*
+          3) Cuadrito que diga cuantas tropas tengo disponibles. (Oso)*
           4)
 
          */
