@@ -58,7 +58,7 @@
     <div id="map">
         
         <label for="troops">Troops to Deploy</label>
-        <input id="troopsToDeploy" type="text" size="5" value="5" maxlength="4" />
+        <input id="troopsToDeploy" type="text" size="5" maxlength="4" />
         
         <div id="map_holder" style="position: relative; width: 1503px;">
             <div id="map_zoom" style="position: absolute; z-index: 1;"></div>
@@ -1370,12 +1370,13 @@
         var player =1;
         var isAssignment = true;
         $("#movementMenu").hide();
+        document.getElementById("troopsToDeploy").value = troopLimit;
         paintInitialTroops(myColor,enemyColor);
 
-        $('#IATurn').click(function (event) {
-            
+        $('#IATurn').click(function (event) {            
             event.preventDefault();
             troopLimit = @ViewBag.IATroopLimit;
+            document.getElementById("troopsToDeploy").value = troopLimit;
             $("#movementMenu").hide(); 
             player = 2;
             isAssignment = true;
