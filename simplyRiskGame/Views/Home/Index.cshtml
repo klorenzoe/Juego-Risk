@@ -1332,15 +1332,9 @@
                     <div align="center" style="font-family:Algerian">
                         <text class="col-md-12">Ataque - Desplazos</text>
                         <select id="country1">
-                            <option>New York </option>
-                            <option>Bucharest</option>
-                            <option>Madrid</option>
                         </select>
                         <text>a</text>
                         <select id="country2">
-                            <option>New York </option>
-                            <option>Bucharest</option>
-                            <option>Madrid</option>
                         </select>
 
                         <text>Número de tropas</text>
@@ -1366,7 +1360,7 @@
         var myColor = '#FF4D61';
         var enemyColor ='#0087FF';
         var troopLimit = @ViewBag.myTroopLimit;
-        var troops;
+        var troops; //<--- is an auxiliary variable.
         var player =1;
         var isAssignment = true;
         $("#movementMenu").hide();
@@ -1376,6 +1370,7 @@
             
             event.preventDefault();
             troopLimit = @ViewBag.IATroopLimit;
+            document.getElementById("troopsToDeploy").value = troopLimit;
             $("#movementMenu").hide(); 
             player = 2;
             isAssignment = true;
@@ -1387,18 +1382,27 @@
         $("#alaska").click(function (event) {
             event.preventDefault();
             if (isAssignment) {
-                if (troopLimit > 0) {
+                //evaluate if a contry is mine
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:1},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
                    
-                    troops = Number($('#alaskaText').text()) + 1;
-                    $('#alaskaText').text(troops);
-                    troopLimit--;
-                    document.getElementById("troopsToDeploy").value = troopLimit;
-                    if (troopLimit == 0)
-                        $("#movementMenu").show();
+                            troops = Number($('#alaskaText').text()) + 1;
+                            $('#alaskaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
                     
-                } else {
-                    if (troopLimit <= 0) { isAssignment = false; }
-                }
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1410,11 +1414,25 @@
         $("#alberta").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0){
-                    troops = Number($('#albertaText').text()) + 1;
-                    $('#albertaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:2},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#albertaText').text()) + 1;
+                            $('#albertaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1426,11 +1444,25 @@
         $("#easternUnitedStates").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 4)){
-                    troops = Number($('#easternUnitedStatesText').text()) + 1;
-                    $('#easternUnitedStatesText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:4},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#easternUnitedStatesText').text()) + 1;
+                            $('#easternUnitedStatesText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                        } 
+                        else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1442,11 +1474,25 @@
         $("#groendlandia").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 5)){
-                    troops = Number($('#groendlandiaText').text()) + 1;
-                    $('#groendlandiaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:5},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#groendlandiaText').text()) + 1;
+                            $('#groendlandiaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1458,11 +1504,25 @@
         $("#northeastTerritories").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 6)){
-                    troops = Number($('#northeastTerritoriesText').text()) + 1;
-                    $('#northeastTerritoriesText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:1},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#northeastTerritoriesText').text()) + 1;
+                            $('#northeastTerritoriesText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1474,11 +1534,25 @@
         $("#ontario").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 7)){
-                    troops = Number($('#ontarioText').text()) + 1;
-                    $('#ontarioText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:7},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#ontarioText').text()) + 1;
+                            $('#ontarioText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1490,11 +1564,25 @@
         $("#quebec").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 8)){
-                    troops = Number($('#quebecText').text()) + 1;
-                    $('#quebecText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:8},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#quebecText').text()) + 1;
+                            $('#quebecText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1502,15 +1590,29 @@
             if ($('#zone').text() !== 'Quebec') { $("#zone").text('Quebec'); }
         });
 
-        //eUWest
+        //eUWest 9
         $("#eUWest").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 9)){
-                    troops = Number($('#eUWestText').text()) + 1;
-                $('#eUWestText').text(troops);
-                troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:9},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#eUWestText').text()) + 1;
+                            $('#eUWestText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1518,15 +1620,29 @@
             if ($('#zone').text() !== 'Estados Unidos del Oeste') { $("#zone").text('Estados Unidos del Oeste'); }
         });
 
-        //Argentina
+        //Argentina 10
         $("#argentina").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 10)){
-                    troops = Number($('#argentinaText').text()) + 1;
-                    $('#argentinaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:10},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#argentinaText').text()) + 1;
+                            $('#argentinaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1534,15 +1650,29 @@
             if ($('#zone').text() !== 'Argentina') { $("#zone").text('Argentina'); }
         });
 
-        //Brazil
+        //Brazil 11
         $("#brazil").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 11)){
-                    troops = Number($('#brazilText').text()) + 1;
-                    $('#brazilText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:11},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#brazilText').text()) + 1;
+                            $('#brazilText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1551,15 +1681,29 @@
         });
 
 
-        //Peru
+        //Peru 12
         $("#peru").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 12)){
-                    troops = Number($('#peruText').text()) + 1;
-                    $('#peruText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:1},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#peruText').text()) + 1;
+                            $('#peruText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1567,15 +1711,29 @@
             if ($('#zone').text() !== 'Peru') { $("#zone").text('Peru'); }
         });
 
-        //venezuela
+        //venezuela 13
         $("#venezuela").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 13)){
-                    troops = Number($('#venezuelaText').text()) + 1;
-                    $('#venezuelaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:13},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#venezuelaText').text()) + 1;
+                            $('#venezuelaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1583,15 +1741,29 @@
             if ($('#zone').text() !== 'Venezuela') { $("#zone").text('Venezuela'); }
         });
 
-        //congo
+        //congo 14
         $("#congo").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 14)){
-                    troops = Number($('#congoText').text()) + 1;
-                    $('#congoText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:14},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#congoText').text()) + 1;
+                            $('#congoText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1599,15 +1771,29 @@
             if ($('#zone').text() !== 'Congo') { $("#zone").text('Congo'); }
         });
 
-        //eastAfrica
+        //eastAfrica 15
         $("#eastAfrica").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 15)){
-                    troops = Number($('#eastAfricaText').text()) + 1;
-                    $('#eastAfricaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:15},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#eastAfricaText').text()) + 1;
+                            $('#eastAfricaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1615,15 +1801,29 @@
             if ($('#zone').text() !== 'Este de África') { $("#zone").text('Este de África'); }
         });
 
-        //Egipt
+        //Egipt 16
         $("#egipt").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 16)){
-                    troops = Number($('#egiptText').text()) + 1;
-                    $('#egiptText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:16},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#egiptText').text()) + 1;
+                            $('#egiptText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1631,15 +1831,29 @@
             if ($('#zone').text() !== 'Egipto') { $("#zone").text('Egipto'); }
         });
 
-        //Madagascar
+        //Madagascar 17
         $("#madagascar").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 17)){
-                    troops = Number($('#madagascarText').text()) + 1;
-                    $('#madagascarText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:17},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#madagascarText').text()) + 1;
+                            $('#madagascarText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1647,15 +1861,29 @@
             if ($('#zone').text() !== 'Madagascar') { $("#zone").text('Madagascar'); }
         });
 
-        //southAfrica
+        //southAfrica 19
         $("#southAfrica").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 19)){
-                    troops = Number($('#southAfricaText').text()) + 1;
-                    $('#southAfricaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:19},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#southAfricaText').text()) + 1;
+                            $('#southAfricaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1667,11 +1895,25 @@
         $("#northAfrica").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 18)){
-                    troops = Number($('#northAfricaText').text()) + 1;
-                    $('#northAfricaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:18},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#northAfricaText').text()) + 1;
+                            $('#northAfricaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1679,15 +1921,29 @@
             if ($('#zone').text() !== 'Norte de África') { $("#zone").text('Norte de África'); }
         });
 
-        //grandBretaña
+        //grandBretaña 20
         $("#grandBretaña").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 20)){
-                    troops = Number($('#grandBretañaText').text()) + 1;
-                    $('#grandBretañaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:20},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#grandBretañaText').text()) + 1;
+                            $('#grandBretañaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1695,15 +1951,28 @@
             if ($('#zone').text() !== 'Gran Bretaña') { $("#zone").text('Gran Bretaña'); }
         });
 
-        //island
+        //island 21
         $("#island").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 21)){
-                    troops = Number($('#islandText').text()) + 1;
-                    $('#islandText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:21},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#islandText').text()) + 1;
+                            $('#islandText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1711,15 +1980,28 @@
             if ($('#zone').text() !== 'Islandia') { $("#zone").text('Islandia'); }
         });
 
-        //polonia
+        //polonia 22
         $("#northEurope").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 22)){
-                    troops = Number($('#northEuropeText').text()) + 1;
-                    $('#northEuropeText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:22},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#northEuropeText').text()) + 1;
+                            $('#northEuropeText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1727,15 +2009,29 @@
             if ($('#zone').text() !== 'Europa del Norte') { $("#zone").text('Europa del Norte'); }
         });
 
-        //escandinavia
+        //escandinavia 23
         $("#escandinavia").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 23)){
-                    troops = Number($('#escandinaviaText').text()) + 1;
-                    $('#escandinaviaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:23},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#escandinaviaText').text()) + 1;
+                            $('#escandinaviaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1743,15 +2039,29 @@
             if ($('#zone').text() !== 'Escandinavia') { $("#zone").text('Escandinavia'); }
         });
 
-        //southEurope
+        //southEurope 24
         $("#southEurope").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 24)){
-                    troops = Number($('#southEuropeText').text()) + 1;
-                    $('#southEuropeText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:24},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#southEuropeText').text()) + 1;
+                            $('#southEuropeText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1759,15 +2069,29 @@
             if ($('#zone').text() !== 'Europa del Sur') { $("#zone").text('Europa del Sur'); }
         });
 
-        //ucrania
+        //ucrania 25
         $("#ucrania").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 25)){
-                    troops = Number($('#ucraniaText').text()) + 1;
-                    $('#ucraniaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:25},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#ucraniaText').text()) + 1;
+                            $('#ucraniaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1775,15 +2099,28 @@
             if ($('#zone').text() !== 'Ucrania') { $("#zone").text('Ucrania'); }
         });
 
-        //westernEurope
+        //westernEurope 26
         $("#westernEurope").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 26)){
-                    troops = Number($('#westernEuropeText').text()) + 1;
-                    $('#westernEuropeText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:26},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#westernEuropeText').text()) + 1;
+                            $('#westernEuropeText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1791,16 +2128,29 @@
             if ($('#zone').text() !== 'Europa Oriental') { $("#zone").text('Europa Oriental'); }
         });
 
-        //afganistan
+        //afganistan 27
         $("#afganistan").click(function (event) {
             event.preventDefault();
-
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 27)){
-                    troops = Number($('#afganistanText').text()) + 1;
-                    $('#afganistanText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:27},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#afganistanText').text()) + 1;
+                            $('#afganistanText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1808,15 +2158,29 @@
             if ($('#zone').text() !== 'Afganistan') { $("#zone").text('Afganistan'); }
         });
 
-        //China
+        //China 28
         $("#china").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 28)){
-                    troops = Number($('#chinaText').text()) + 1;
-                    $('#chinaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:28},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#chinaText').text()) + 1;
+                            $('#chinaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1824,15 +2188,28 @@
             if ($('#zone').text() !== 'China') { $("#zone").text('China'); }
         });
 
-        //india
+        //india 29
         $("#india").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 29)){
-                    troops = Number($('#indiaText').text()) + 1;
-                    $('#indiaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:29},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#indiaText').text()) + 1;
+                            $('#indiaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1840,15 +2217,29 @@
             if ($('#zone').text() !== 'India') { $("#zone").text('India'); }
         });
 
-        //irkutsk
+        //irkutsk 30
         $("#irkutsk").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 30)){
-                    troops = Number($('#irkutskText').text()) + 1;
-                    $('#irkutskText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:30},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#irkutskText').text()) + 1;
+                            $('#irkutskText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1856,15 +2247,29 @@
             if ($('#zone').text() !== 'Irkutsk') { $("#zone").text('Irkutsk'); }
         });
 
-        //irkutsk
+        //japon 31
         $("#japan").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 3)){
-                    troops = Number($('#japanText').text()) + 1;
-                    $('#japanText').text(troops);
-                    troopLimit--;
-                }
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:31},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#japanText').text()) + 1;
+                            $('#japanText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1872,15 +2277,29 @@
             if ($('#zone').text() !== 'Japon') { $("#zone").text('Japon'); }
         });
 
-        //kamchatca
+        //kamchatca 32
         $("#kamchatca").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 32)){
-                    troops = Number($('#kamchatcaText').text()) + 1;
-                    $('#kamchatcaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:32},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#kamchatcaText').text()) + 1;
+                            $('#kamchatcaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1889,15 +2308,29 @@
         });
 
 
-        //middleEast
+        //middleEast 33
         $("#middleEast").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 33)){
-                    troops = Number($('#middleEastText').text()) + 1;
-                    $('#middleEastText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:33},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#middleEastText').text()) + 1;
+                            $('#middleEastText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1905,15 +2338,29 @@
             if ($('#zone').text() !== 'Oriente Medio') { $("#zone").text('Oriente Medio'); }
         });
 
-        //mongolia
+        //mongolia 34
         $("#mongolia").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 34)){
-                    troops = Number($('#mongoliaText').text()) + 1;
-                    $('#mongoliaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:34},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#mongoliaText').text()) + 1;
+                            $('#mongoliaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1921,15 +2368,28 @@
             if ($('#zone').text() !== 'Mongolia') { $("#zone").text('Mongolia'); }
         });
 
-        //slam
+        //slam 35
         $("#slam").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 35)){
-                    troops = Number($('#slamText').text()) + 1;
-                    $('#slamText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:35},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#slamText').text()) + 1;
+                            $('#slamText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1937,15 +2397,29 @@
             if ($('#zone').text() !== 'Slam') { $("#zone").text('Slam'); }
         });
 
-        //siberia
+        //siberia 36
         $("#siberia").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 36)){
-                    troops = Number($('#siberiaText').text()) + 1;
-                    $('#siberiaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:36},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#siberiaText').text()) + 1;
+                            $('#siberiaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1953,15 +2427,29 @@
             if ($('#zone').text() !== 'Siberia') { $("#zone").text('Siberia'); }
         });
 
-        //ural
+        //ural 37
         $("#ural").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 37)){
-                    troops = Number($('#uralText').text()) + 1;
-                    $('#uralText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:37},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#uralText').text()) + 1;
+                            $('#uralText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1969,15 +2457,29 @@
             if ($('#zone').text() !== 'Ural') { $("#zone").text('Ural'); }
         });
 
-        //yakutska
+        //yakutska 38
         $("#yakutska").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 38)){
-                    troops = Number($('#yakutskaText').text()) + 1;
-                    $('#yakutskaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:38},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#yakutskaText').text()) + 1;
+                            $('#yakutskaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -1985,15 +2487,29 @@
             if ($('#zone').text() !== 'Yakutska') { $("#zone").text('Yakutska'); }
         });
 
-        //easternAustralia
+        //easternAustralia 39
         $("#easternAustralia").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 39)){
-                    troops = Number($('#easternAustraliaText').text()) + 1;
-                    $('#easternAustraliaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:39},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#easternAustraliaText').text()) + 1;
+                            $('#easternAustraliaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -2001,15 +2517,29 @@
             if ($('#zone').text() !== 'Australia Oriental') { $("#zone").text('Australia Oriental'); }
         });
 
-        //indonesia
+        //indonesia 40
         $("#indonesia").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 40)){
-                    troops = Number($('#indonesiaText').text()) + 1;
-                    $('#indonesiaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:40},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#indonesiaText').text()) + 1;
+                            $('#indonesiaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -2017,15 +2547,29 @@
             if ($('#zone').text() !== 'Indonesia') { $("#zone").text('Indonesia'); }
         });
 
-        //nuevaGuinea
+        //nuevaGuinea 41
         $("#nuevaGuinea").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 41)){
-                    troops = Number($('#nuevaGuineaText').text()) + 1;
-                    $('#nuevaGuineaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:41},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#nuevaGuineaText').text()) + 1;
+                            $('#nuevaGuineaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -2033,15 +2577,29 @@
             if ($('#zone').text() !== 'Nueva Guinea') { $("#zone").text('Nueva Guinea'); }
         });
 
-        //westerbAustralia
+        //westerbAustralia 42
         $("#westerbAustralia").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 42)){
-                    troops = Number($('#westerbAustraliaText').text()) + 1;
-                    $('#westerbAustraliaText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:42},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#westerbAustraliaText').text()) + 1;
+                            $('#westerbAustraliaText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -2049,15 +2607,29 @@
             if ($('#zone').text() !== 'Australia del Oeste') { $("#zone").text('Australia del Oeste'); }
         });
 
-        //mexico
+        //mexico 3
         $("#mexico").click(function (event) {
             event.preventDefault();
             if(isAssignment){
-                if(troopLimit>0 && countryBelongsPlayer(player, 3)){
-                    troops = Number($('#mexicoText').text()) + 1;
-                    $('#mexicoText').text(troops);
-                    troopLimit--;
-                }else{ if(troopLimit<=0){isAssignment = false;}}
+                $.ajax({
+                    url: "/Home/isTheCountryMine",
+                    type: "POST",
+                    data: { player:player, country:3},
+                    success: function (data) {
+                        if (troopLimit > 0 && data.belongs) {
+                            troops = Number($('#mexicoText').text()) + 1;
+                            $('#mexicoText').text(troops);
+                            troopLimit--;
+                            document.getElementById("troopsToDeploy").value = troopLimit;
+                            if (troopLimit == 0)
+                                playerCountries(player);
+                                $("#movementMenu").show();
+                    
+                        } else {
+                            if (troopLimit <= 0) { isAssignment = false; }
+                        }
+                    }
+                });
             }else{
                 //it is a movement
             }
@@ -2253,6 +2825,7 @@
             type: "POST",
             data: {},
             success: function (data) {
+                debugger;
                 data.enemy.forEach(function(troop) {
                     $(equivalences[troop].circle).css({ fill: enemyColor });
                 });
@@ -2269,19 +2842,23 @@
         if(player==2){ $(equivalences[countryid].circle).css({ fill: enemyColor  });}
     }
 
-    function countryBelongsPlayer(player_, country_){
+    function playerCountries(playerr){
+        debugger;
         $.ajax({
-            url: "/Home/isTheCountryMine",
+            url: "/Home/playerCountries",
             type: "POST",
-            data: { player:player_, country:country_},
+            data: { player:playerr},
             success: function (data) {
-                return data.belongs;
+                debugger;
+                console.log(data);
+                data.countries.forEach(function(c){
+                    debugger;
+                    var res = c.split("|");
+                    $('#country1').append('<option id="'+ res[0] +'">'+res[1]+'</option>');
+                });
             }
         });
-    }
-    function returnTroops(player){
-    }
 
-    function nearCountries(country){
+    
     }
 </script>

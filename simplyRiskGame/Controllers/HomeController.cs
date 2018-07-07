@@ -9,14 +9,13 @@ namespace simplyRiskGame.Controllers
 {
     public class HomeController : Controller
     {
-        public CountriesManager manager = new CountriesManager();
+        public static CountriesManager manager = new CountriesManager();
 
         public HomeController() {
-            manager.FillMap();
+            
         }
         public ActionResult Index()
         {
-            
             ViewBag.myTroopLimit = 5;
             ViewBag.IATroopLimit = 5;
             return View();
@@ -368,6 +367,16 @@ namespace simplyRiskGame.Controllers
                 }
             }
 
+            foreach (var c in countriesIA)
+            {
+                manager.Countries[c].Owner = 2;
+            }
+
+            foreach (var c in countriesPlayer)
+            {
+                manager.Countries[c].Owner = 1;
+            }
+
             return Json(new { enemy = countriesIA, player = countriesPlayer });
         }
 
@@ -395,6 +404,11 @@ namespace simplyRiskGame.Controllers
             return Json(new { troopsOptions = troops });
         }
 
+        [HttpPost]
+        public ActionResult playerCountries(int player) {
+            var countriesList = manager.getPlayerCountries(player);
+            return Json(new { countries = countriesList });
+        }
 
 
         /*
