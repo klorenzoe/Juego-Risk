@@ -17,7 +17,7 @@ namespace simplyRiskGame.Controllers
         public ActionResult Index()
         {
             ViewBag.myTroopLimit = 5;
-            ViewBag.IATroopLimit = 5;
+            ViewBag.IATroopLimit = 10;
             return View();
         }
 
@@ -379,6 +379,17 @@ namespace simplyRiskGame.Controllers
             }
 
             return Json(new { enemy = countriesIA, player = countriesPlayer });
+        }
+
+        [HttpPost]
+        public ActionResult getMovementLogbook(string _data)
+        {
+            string[] data = _data.Split('|');
+            string country1 = data[0];
+            //string country2 = data[1];
+            //string troopsNumber = data[2];
+
+            return Json(new { something = true });
         }
 
         [HttpPost]

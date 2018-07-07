@@ -58,7 +58,7 @@
     <div id="map">
         
         <label for="troops">Troops to Deploy</label>
-        <input id="troopsToDeploy" type="text" size="5" value="5" maxlength="4" />
+        <input id="troopsToDeploy" type="text" size="5" maxlength="4" />
         
         <div id="map_holder" style="position: relative; width: 1503px;">
             <div id="map_zoom" style="position: absolute; z-index: 1;"></div>
@@ -1365,11 +1365,10 @@
         var isAssignment = true;
         Troops();
         $("#movementMenu").hide();
-
+        document.getElementById("troopsToDeploy").value = troopLimit;
         paintInitialTroops(myColor,enemyColor);
 
-        $('#IATurn').click(function (event) {
-            
+        $('#IATurn').click(function (event) {            
             event.preventDefault();
             troopLimit = @ViewBag.IATroopLimit;
             document.getElementById("troopsToDeploy").value = troopLimit;
@@ -2944,6 +2943,26 @@
             success: function (data) {
                 return initialTroops(data.initialTroops);
             }
+        });
+    }
+
+    function movementThingys() {
+        
+        var information = $("#country1 option:selected").text();
+        console.log(information);
+        information += $("#country2 option:selected").text();
+        console.log(information);
+        information += $("#NumTroops option:selected").text();
+        console.log(information);
+        $.ajax({
+            url: "/Home/getMovementLogbook",
+            type : "POST",
+            data: { _data: information },
+            success: function () {
+                console.log("fuck ");
+                return true;
+            }
+
         });
     }
     function initialTroops(troops)
