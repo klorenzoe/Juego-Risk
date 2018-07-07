@@ -339,19 +339,20 @@ namespace simplyRiskGame.Controllers
 
             //ARRAY WITH THE INITITAL COUNTRIES FOR THE IA
             int[] countriesIA = new int[number];
-
-            countryNumberIA = random.Next(1, 42);
-            countriesIA[0] = countryNumberPlayer;
-            countriesIA[0] = 0;
-            while (countriesIA[0] == 0)
+            
+            countriesIA[0] = countryNumberIA;
+            bool condition = true;
+            while (condition == true)
             {
                 if (!countriesPlayer.Contains(countryNumberIA))
                 {
+                    countryNumberIA = random.Next(1, 42);
                     countriesIA[0] = countryNumberIA;
+                    condition = false;
                 }
                 else
                 {
-                    countriesIA[0] = 0;
+                    condition = true;
                 }
             }
             for (int i = 1; i < number; i++)
@@ -395,7 +396,20 @@ namespace simplyRiskGame.Controllers
             return Json(new { troopsOptions = troops });
         }
 
-
+        [HttpPost]
+        public ActionResult countryTroops()
+        {
+            int[] TroopsCount = new int[42];
+            Random rnd = new Random();
+            int troops = 0;
+            for (int i = 0; i < 42; i ++)
+            {
+                troops = rnd.Next(2, 5);
+                TroopsCount[i] = troops;
+            }
+            
+            return Json(new { initialTroops = TroopsCount });
+        }
 
         /*
          *1) llenar los países Iniciales y neutros de tropas iniciales. (Yulisa)
