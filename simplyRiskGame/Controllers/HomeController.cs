@@ -382,6 +382,17 @@ namespace simplyRiskGame.Controllers
         }
 
         [HttpPost]
+        public ActionResult getMovementLogbook(string _data)
+        {
+            string[] data = _data.Split('|');
+            string country1 = data[0];
+            //string country2 = data[1];
+            //string troopsNumber = data[2];
+
+            return Json(new { something = true });
+        }
+
+        [HttpPost]
         public ActionResult troopsAssign(int troopsAmount)
         {
             int[] troops;
