@@ -12,6 +12,10 @@ namespace simplyRiskGame.Models
     {
         public Dictionary<int, Country> Countries = new Dictionary<int, Country>();
         public Graph<int,string> CountriesGraph = new Graph<int, string>();
+
+        public CountriesManager() {
+            FillMap();
+        }
         public void FillMap()
         {   //North America
             Countries.Add(1, new Country("Alaska", 1, new List<int> { 6, 2, 32 }));
@@ -84,16 +88,27 @@ namespace simplyRiskGame.Models
             return t;
         }
 
-        public List<int> getPlayerCountries(int player) // number of the player who owns that country, 0 if its neutral 
+        public List<string> getPlayerCountries(int player) // number of the player who owns that country, 0 if its neutral 
         {
-            List<int> t = new List<int>(); //countries ids list
+            List<string> t = new List<string>(); //countries ids list
             for (int i = 1; i <= Countries.Count(); i++)
             {
                 if (Countries[i].Owner == player)
-                    t.Add(i);
+                    t.Add(i.ToString()+"|"+ Countries[i].CountryName);
             }
             return t;
         }
+
+        //public List<Country> getPlayerCountries(int player) // number of the player who owns that country, 0 if its neutral 
+        //{
+        //    List <Country> t = new List<Country>(); //countries ids list
+        //    for (int i = 1; i <= Countries.Count(); i++)
+        //    {
+        //        if (Countries[i].Owner == player)
+        //            t.Add(Countries[i]);
+        //    }
+        //    return t;
+        //}
 
         #region Dijkstra
         public void SetCountriesGraph()
