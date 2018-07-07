@@ -17,7 +17,7 @@ namespace simplyRiskGame.Controllers
         public ActionResult Index()
         {
             ViewBag.myTroopLimit = 5;
-            ViewBag.IATroopLimit = 5;
+            ViewBag.IATroopLimit = 10;
             return View();
         }
 
@@ -416,6 +416,8 @@ namespace simplyRiskGame.Controllers
             return Json(new { troopsOptions = troops });
         }
 
+
+
         [HttpPost]
         public ActionResult countryTroops()
         {
@@ -431,11 +433,26 @@ namespace simplyRiskGame.Controllers
             return Json(new { initialTroops = TroopsCount });
         }
 
-        public ActionResult playerCountries(int player) {
+        [HttpPost]
+        public ActionResult playerCountries(int player)
+        {
             var countriesList = manager.getPlayerCountries(player);
             return Json(new { countries = countriesList });
         }
-        
+
+        [HttpPost]
+        public ActionResult getNeighboor(string country)
+        {
+            var ListNeighboor = manager.getNeighborsstr(country);
+            return Json(new { Neighboor = ListNeighboor });
+        }
+
+        [HttpPost]
+        public ActionResult getTroopNumber(string country)
+        {
+            var number_ = manager.getTroopsCount(country);
+            return Json(new { number = number_ });
+        }
 
         /*
          *1) llenar los países Iniciales y neutros de tropas iniciales. (Yulisa)
