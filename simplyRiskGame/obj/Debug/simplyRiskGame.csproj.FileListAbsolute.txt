@@ -465,3 +465,5 @@ C:\Users\Diego Pérez Moir\Desktop\U\Interciclo Yisus\Teoria de Sistemas\Juego-R
 C:\Users\Diego Pérez Moir\Desktop\U\Interciclo Yisus\Teoria de Sistemas\Juego-Risk\simplyRiskGame\obj\Debug\simplyRiskGame.csproj.CopyComplete
 C:\Users\Diego Pérez Moir\Desktop\U\Interciclo Yisus\Teoria de Sistemas\Juego-Risk\simplyRiskGame\obj\Debug\simplyRiskGame.dll
 C:\Users\Diego Pérez Moir\Desktop\U\Interciclo Yisus\Teoria de Sistemas\Juego-Risk\simplyRiskGame\obj\Debug\simplyRiskGame.pdb
+C:\Users\DELL\Desktop\Juego-Risk\simplyRiskGame\bin\Dijkstra.NET.dll
+C:\Users\DELL\Desktop\Juego-Risk\simplyRiskGame\bin\Dijkstra.NET.xml

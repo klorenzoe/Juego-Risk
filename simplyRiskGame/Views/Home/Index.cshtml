@@ -1369,8 +1369,13 @@
         var troops;
         var player =1;
         var isAssignment = true;
+        Troops();
         $("#movementMenu").hide();
+<<<<<<< HEAD
         document.getElementById("troopsToDeploy").value = troopLimit;
+=======
+
+>>>>>>> 23d94fa28d2e506246cccd5a504f5ce903cfeb8e
         paintInitialTroops(myColor,enemyColor);
 
         $('#IATurn').click(function (event) {            
@@ -2280,6 +2285,25 @@
             }
         });
     }
+
+    function Troops(){
+        $.ajax({
+            url: "/Home/countryTroops",
+            type: "POST",
+            data: { },
+            success: function (data) {
+                return initialTroops(data.initialTroops);
+            }
+        });
+    }
+    function initialTroops(troops)
+        {
+            for (var i = 1; i <= 42; i++) {
+                $(equivalences[i].text).text(troops[i-1]);
+            
+            }                  
+        }
+
     function returnTroops(player){
     }
 
