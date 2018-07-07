@@ -132,6 +132,25 @@ namespace simplyRiskGame.Models
             }
             return 0;
         }
+
+        public int TroopdforAssign(int player)
+        {
+            int count = 0;
+            for (int i = 1; i <= Countries.Count(); i++)
+            {
+                if (Countries[i].Owner == player)
+                    count++;
+            }
+            if (count <= 5)
+                return 5;
+            else if (count <= 10)
+                return 10;
+            else if (count <= 15)
+                return 15;
+            else
+                return 20;
+        }
+
         #region Dijkstra
         public void SetCountriesGraph()
         {
