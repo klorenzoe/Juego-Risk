@@ -1363,7 +1363,9 @@
         var troops; //<--- is an auxiliary variable.
         var player =1;
         var isAssignment = true;
+        Troops();
         $("#movementMenu").hide();
+
         paintInitialTroops(myColor,enemyColor);
 
         $('#IATurn').click(function (event) {
@@ -2858,6 +2860,28 @@
                 });
             }
         });
+
+    }
+
+    function Troops(){
+        $.ajax({
+            url: "/Home/countryTroops",
+            type: "POST",
+            data: { },
+            success: function (data) {
+                return initialTroops(data.initialTroops);
+            }
+        });
+    }
+    function initialTroops(troops)
+        {
+            for (var i = 1; i <= 42; i++) {
+                $(equivalences[i].text).text(troops[i-1]);
+            
+            }                  
+        }
+
+    function returnTroops(player){
 
     
     }
