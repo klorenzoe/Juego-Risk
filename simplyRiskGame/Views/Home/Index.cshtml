@@ -1327,7 +1327,7 @@
                     </svg>
                 </div>
 
-                <div style="background-color:#F2B035" id="movementMenu">
+                <div style="background-color:#33ccff" id="movementMenu">
                     <br />
                     <div align="center" style="font-family:Algerian">
                         <text class="col-md-12">Ataque - Desplazos</text>
@@ -1339,11 +1339,9 @@
 
                         <text>Número de tropas</text>
                         <select id="NumTroops">
-                            <option>0</option>
-                            <option>1</option>
-                            <option>2</option>
+                           
                         </select>
-                        <small> <button class="btn" style="background-color:#FF225A"><i class="fa fa-arrow-circle-o-right" style="font-size:24px; color:white"> </i> <text style="color:white"></text></button></small>
+                        <small> <button class="btn" style="background-color:#FF225A" id="redButton"><i class="fa fa-arrow-circle-o-right" style="font-size:24px; color:white"> </i> <text style="color:white"></text></button></small>
                     </div>
                     <br />
                 </div>
@@ -1376,8 +1374,27 @@
             player = 2;
             isAssignment = true;
         });
-        //Remaining troops to deploy 
-        
+        //Attaking n' movement stuff
+        $("#redButton").click(function (event) {
+            event.preventDefault();
+            var information = $("#country1 option:selected").text();
+            console.log(information);
+            information += "|" + $("#country2 option:selected").text();
+            console.log(information);
+            information += "|" + $("#NumTroops option:selected").text();
+            console.log(information);
+            $.ajax({
+                url: "/Home/getMovementLogbook",
+                type: "POST",
+                data: { _data: information },
+                success: function () {
+                    
+                    return true;
+                }
+
+            });
+        })
+
 
         //alaska
         $("#alaska").click(function (event) {
@@ -2657,7 +2674,6 @@
 
         $('#country1').change(function(event) { 
             event.preventDefault();
-            debugger;
             var e = document.getElementById("country1");
             var strSelected = e.options[e.selectedIndex].text;
             nearbyCountries(strSelected);
@@ -2670,7 +2686,7 @@
                 type: "POST",
                 data: { country : countryName },
                 success: function (data) {
-                    debugger;
+                    
                     getTroopsCount(data.number);
                 }
             });
@@ -2682,7 +2698,7 @@
                 type: "POST",
                 data: { troopsAmount : Availabletroops },
                 success: function (data) {
-                    debugger;
+                    
                     $("#NumTroops option").remove();
                     data.troopsOptions.forEach(function(t){
                         $('#NumTroops').append('<option>'+t+'</option>');
@@ -2691,16 +2707,14 @@
             });}
 
         function nearbyCountries(countryName){
-            debugger;
+            
             $.ajax({
                 url: "/Home/getNeighboor",
                 type: "POST",
                 data: { country : countryName },
                 success: function (data) {
-                    debugger;
                     $("#country2 option").remove();
                     data.Neighboor.forEach(function(c){
-                        debugger;
                         var res = c.split("|");
                         $('#country2').append('<option id="'+ res[0] +'">'+res[1]+'</option>');
                     });
@@ -2894,7 +2908,6 @@
             type: "POST",
             data: {},
             success: function (data) {
-                debugger;
                 data.enemy.forEach(function(troop) {
                     $(equivalences[troop].circle).css({ fill: enemyColor });
                 });
@@ -2913,16 +2926,14 @@
 
     function playerCountries(playerr){
         var count = 0;
-        debugger;
+       
         $.ajax({
             url: "/Home/playerCountries",
             type: "POST",
             data: { player:playerr},
             success: function (data) {
-                debugger;
                 console.log(data);
                 data.countries.forEach(function(c){
-                    debugger;
                     var res = c.split("|");
                     $('#country1').append('<option id="'+ res[0] +'">'+res[1]+'</option>');
                      if(count==0){ 
@@ -2945,6 +2956,8 @@
             }
         });
     }
+
+   
 
     function movementThingys() {
         
@@ -2974,16 +2987,14 @@
         }
 
     function nearbyCountries(countryName){
-        debugger;
         $.ajax({
             url: "/Home/getNeighboor",
             type: "POST",
             data: { country : countryName },
             success: function (data) {
-                debugger;
+                
                 $("#country2 option").remove();
                 data.Neighboor.forEach(function(c){
-                    debugger;
                     var res = c.split("|");
                     $('#country2').append('<option id="'+ res[0] +'">'+res[1]+'</option>');
                 });
@@ -3016,6 +3027,5 @@
                 });
             }
         });
-        debugger;
     }
 </script>

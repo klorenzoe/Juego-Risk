@@ -132,6 +132,15 @@ namespace simplyRiskGame.Models
             }
             return 0;
         }
+
+        public List<int> getNeighborsAlly(int cpuntryID, int player)
+        {
+            List<int> temp = new List<int>();
+            for (int i = 0; i < Countries[cpuntryID].Neighborsint.Count(); i++)
+                if (Countries[Countries[cpuntryID].Neighborsint[i]].Owner == player)
+                    temp.Add(Countries[cpuntryID].Neighborsint[i]);
+            return temp;
+        }
         #region Dijkstra
         public void SetCountriesGraph()
         {

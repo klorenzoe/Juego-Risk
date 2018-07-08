@@ -385,11 +385,49 @@ namespace simplyRiskGame.Controllers
         public ActionResult getMovementLogbook(string _data)
         {
             string[] data = _data.Split('|');
-            string country1 = data[0];
-            //string country2 = data[1];
-            //string troopsNumber = data[2];
+            var country1 = 0;
+            var country2 = 0;
+            string troopsNumber = data[2];
+            string values = ""; 
 
-            return Json(new { something = true });
+            for (int i = 1; i <= manager.Countries.Count; i++)
+            {
+                //get deployer's country id
+                if(manager.Countries[i].CountryName == data[0])
+                {
+                    manager.Countries[i].TroopsCount -= int.Parse(data[2]);
+                    country1 = manager.Countries[i].CountryID; 
+                }
+                //get receiver's country id
+                if(manager.Countries[i].CountryName == data[1])
+                    country2 = manager.Countries[i].CountryID;        
+            }
+            // look if the countries are neighbors
+            
+            if(manager.getNeighborsAlly(country1, manager.Countries[country1].Owner).Contains(country2))
+            {
+                manager.Countries[country2].TroopsCount += int.Parse(data[2]);
+                values = "1";
+            }               
+            // neutral or enemies
+            else
+            {                
+                // condition if the country was conquered
+                if (manager.Countries[country2].TroopsCount < int.Parse(data[2]))
+                {
+                    manager.Countries[country2].Owner = manager.Countries[country1].Owner;
+                    values = "1";
+                }
+                // still neutral or enemy 
+                else
+                    values = "0";
+
+                manager.Countries[country2].TroopsCount -= int.Parse(data[2]);
+            }
+            // values = one if the country was conquered + id deployer + deployer remaining troops + id receiver + receiver remaining troops + player
+            values += "|" + country1 + "|" + manager.Countries[country1].TroopsCount + "|" + country2 + "|" +
+               manager.Countries[country2].TroopsCount + "|" + manager.Countries[country1].Owner; 
+            return Json(new { _values = values });
         }
 
         [HttpPost]
