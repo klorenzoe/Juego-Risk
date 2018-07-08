@@ -178,6 +178,27 @@ namespace simplyRiskGame.Models
             return t;
         }
 
+        /// <summary>
+        /// get the amount of neighbors of each kind
+        /// </summary>
+        /// <param name="countryID"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public int[] getNeighborsCount(int countryID, int player)
+        {
+            int[] t = new int[3];
+            for (int i = 0; i < Countries[countryID].Neighborsint.Count(); i++)
+            {
+                if (Countries[Countries[countryID].Neighborsint[i]].Owner == 0)
+                    t[0] ++;
+                else if (Countries[Countries[countryID].Neighborsint[i]].Owner == player)
+                    t[1] ++;
+                else
+                    t[2] ++;
+            }
+            return t;
+        }
+
 
         #region Dijkstra
         public void SetCountriesGraph()
