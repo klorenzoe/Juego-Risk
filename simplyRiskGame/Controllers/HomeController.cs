@@ -10,9 +10,11 @@ namespace simplyRiskGame.Controllers
     public class HomeController : Controller
     {
         public static CountriesManager manager = new CountriesManager();
+
         public Excel fileManager = new Excel();
         public int[] rowNumbers = new int[3];
         public string path = "D:/GitHub/SECOND/Juego-Risk/dataSet.xlsx"; 
+        public static List<int> initialiceCountries = new List<int>();
 
         public HomeController() {
             
@@ -20,6 +22,7 @@ namespace simplyRiskGame.Controllers
         public ActionResult Index()
         {
             manager = new CountriesManager();
+            initialiceCountries = new List<int>();
             ViewBag.myTroopLimit = manager.TroopdforAssign(1);
             ViewBag.IATroopLimit = manager.TroopdforAssign(2);
             return View();
@@ -379,13 +382,16 @@ namespace simplyRiskGame.Controllers
             }
 
             foreach (var c in countriesIA)
+
             {
                 manager.Countries[c].Owner = 2;
+                initialiceCountries.Add(c);
             }
 
             foreach (var c in countriesPlayer)
             {
                 manager.Countries[c].Owner = 1;
+                initialiceCountries.Add(c);
             }
 
             return Json(new { enemy = countriesIA, player = countriesPlayer });
@@ -464,8 +470,8 @@ namespace simplyRiskGame.Controllers
                     values = "0";
 
                 manager.Countries[country2].TroopsCount = Math.Abs(int.Parse(data[2]) - manager.Countries[country2].TroopsCount);
-               
-                
+                //manager.Countries[country2].TroopsCount = Math.Abs(manager.Countries[country2].TroopsCount - int.Parse(data[2]));
+
             }
             // values = one if the country was conquered + id deployer + deployer remaining troops + id receiver + receiver remaining troops + player
             values += "|" + country1 + "|" + manager.Countries[country1].TroopsCount + "|" + country2 + "|" +
@@ -535,10 +541,11 @@ namespace simplyRiskGame.Controllers
             int[] TroopsCount = new int[42];
             Random rnd = new Random();
             int troops = 0;
-            for (int i = 0; i < 42; i ++)
+            for (int i = 0; i < 42; i++)
             {
                 troops = rnd.Next(2, 5);
                 TroopsCount[i] = troops;
+                manager.Countries[i + 1].TroopsCount = troops;
             }
             
             return Json(new { initialTroops = TroopsCount });
