@@ -10,6 +10,9 @@ namespace simplyRiskGame.Controllers
     public class HomeController : Controller
     {
         public static CountriesManager manager = new CountriesManager();
+        public Excel fileManager = new Excel();
+        public int[] rowNumbers = {2, 2, 2 };
+        public string path = ""; 
 
         public HomeController() {
             
@@ -423,7 +426,9 @@ namespace simplyRiskGame.Controllers
                 else
                     values = "0";
 
-                manager.Countries[country2].TroopsCount -= int.Parse(data[2]);
+                manager.Countries[country2].TroopsCount = Math.Abs(int.Parse(data[2]) - manager.Countries[country2].TroopsCount);
+               
+                
             }
             // values = one if the country was conquered + id deployer + deployer remaining troops + id receiver + receiver remaining troops + player
             values += "|" + country1 + "|" + manager.Countries[country1].TroopsCount + "|" + country2 + "|" +
@@ -436,7 +441,11 @@ namespace simplyRiskGame.Controllers
         {
             string[] temp = _data.Split('|');
             manager.Countries[Convert.ToInt16(temp[0])].TroopsCount = Convert.ToInt16(temp[1]);
-
+            fileManager.Open(path, 1);
+            fileManager.Write(rowNumbers[0], "A", temp[0]);
+            fileManager.Write(rowNumbers[0], "B", temp[1]);
+            fileManager.Close();
+            
             return Json(new { something = true });
         }
 
@@ -507,6 +516,9 @@ namespace simplyRiskGame.Controllers
         {
             ViewBag.myTroopLimit = manager.TroopdforAssign(1);
             ViewBag.IATroopLimit = manager.TroopdforAssign(2);
+            fileManager.Open(path, 1);
+            fileManager.Write(rowNumbers[0], "C", manager.TroopdforAssign(1).ToString());
+            fileManager.Close();
             return Json(new { succes = true });
         }
 
