@@ -205,11 +205,16 @@ namespace simplyRiskGame.Models
         {
             for (int i = 1; i <= Countries.Count(); i++)
                 CountriesGraph.AddNode(i);
+            UInt16 to = 0;
+            int cost = 0;
+            
             for (int i = 1; i <= Countries.Count(); i++)
             {
                 for (int j = 0; j < Countries[i].Neighborsint.Count(); j++)
                 {
-                    CountriesGraph.Connect(Convert.ToUInt16(i), Convert.ToUInt16(Countries[i].Neighborsint[j]), Countries[Countries[i].Neighborsint[j]].TroopsCount, "fuck yeah");
+                    to = Convert.ToUInt16(Countries[i].Neighborsint[j]);
+                    cost = Countries[Countries[i].Neighborsint[j]].TroopsCount;
+                    CountriesGraph.Connect(Convert.ToUInt16(i-1), to , cost, "fuck yeah");
                 }
             }
         }
