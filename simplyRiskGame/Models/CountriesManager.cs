@@ -157,6 +157,28 @@ namespace simplyRiskGame.Models
                     temp.Add(Countries[cpuntryID].Neighborsint[i]);
             return temp;
         }
+        /// <summary>
+        /// get the troops of the neighbors
+        /// </summary>
+        /// <param name="countryID"></param>
+        /// <param name="player"></param>
+        /// <returns> [neutral, ally, enemy]</returns>
+        public int[] getNeighborsTroopsCount(int countryID, int player)
+        {
+            int[] t = new int[3];
+            for (int i = 0; i < Countries[countryID].Neighborsint.Count(); i++)
+            {
+                if (Countries[Countries[countryID].Neighborsint[i]].Owner == 0)
+                    t[0] += Countries[Countries[countryID].Neighborsint[i]].TroopsCount;
+                else if(Countries[Countries[countryID].Neighborsint[i]].Owner == player)
+                    t[1] += Countries[Countries[countryID].Neighborsint[i]].TroopsCount;
+                else
+                    t[2] += Countries[Countries[countryID].Neighborsint[i]].TroopsCount;
+            }
+            return t;
+        }
+
+
         #region Dijkstra
         public void SetCountriesGraph()
         {
@@ -177,6 +199,20 @@ namespace simplyRiskGame.Models
             IShortestPathResult result = dijkstra.Process(Convert.ToUInt16(OriginCountry), Convert.ToUInt16(targetCountry)); //result contains the shortest path
             return result.Distance;
         }
+
+        public int getDistance(int countryID)
+        {
+            int temp = 100;
+            int a = temp;
+            for (int i = 1; i <= Countries.Count(); i++)
+            {
+                a = CalulateDistanceDijkstra(countryID, i);
+                if (a < temp)
+                    temp = a;
+            }
+            return temp;
+        }
+
         #endregion
     }
 }

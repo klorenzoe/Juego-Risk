@@ -34,21 +34,6 @@ namespace simplyRiskGame.Models
             Neighbors = Neighborslst;
         }
 
-        public int[] getNeighborsTroopsCount()//[neutral, ally, enemy]
-        {
-            int[] t = new int[3];
-            for (int i = 0; i < Neighbors.Count(); i++)
-            {
-                if (Neighbors[i].Owner == 0)
-                    t[0] = + Neighbors[i].TroopsCount;
-                else if (Neighbors[i].Owner == 1)
-                    t[1] = + Neighbors[i].TroopsCount;
-                else
-                    t[2] = + Neighbors[i].TroopsCount;
-            }
-            return t;
-        }
-
         public List<int> getNeighborsIDs()
         {
             return Neighborsint;
