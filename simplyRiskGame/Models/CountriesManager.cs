@@ -68,7 +68,7 @@ namespace simplyRiskGame.Models
             Countries.Add(42, new Country("Australia Occidental", 42, new List<int> { 40, 41, 39 }));
 
             UpdateCountriesList();
-            SetCountriesGraph();
+           // SetCountriesGraph();
         }
 
         public void UpdateCountriesList()
@@ -84,7 +84,6 @@ namespace simplyRiskGame.Models
             List<Country> t = new List<Country>();
             for (int i = 0; i < C.Neighborsint.Count(); i++)
                 t.Add(Countries[C.Neighborsint[i]]);
-
             return t;
         }
 
@@ -221,6 +220,8 @@ namespace simplyRiskGame.Models
 
         public int CalulateDistanceDijkstra(int OriginCountry, int targetCountry)
         {
+            CountriesGraph = new Graph<int, string>();
+            SetCountriesGraph();
             var dijkstra = new Dijkstra<int, string>(CountriesGraph);
             IShortestPathResult result = dijkstra.Process(Convert.ToUInt16(OriginCountry), Convert.ToUInt16(targetCountry)); //result contains the shortest path
             return result.Distance;
@@ -228,14 +229,20 @@ namespace simplyRiskGame.Models
 
         public int getDistance(int countryID)
         {
+
             int temp = 100;
-            int a = temp;
-            for (int i = 1; i <= Countries.Count(); i++)
+            
+            List<string> temporallsy = getPlayerCountries(2);
+            List<int> result = new List<int>();
+            
+            for (int i = 0; i < temporallsy.Count(); i++)
             {
-                a = CalulateDistanceDijkstra(countryID, i);
-                if (a < temp)
-                    temp = a;
+                string[] temparr = temporallsy[i].Split('|');
+                result.Add(CalulateDistanceDijkstra(countryID, int.Parse(temparr[0]))); 
+                   
             }
+            temp = result.Min(); 
+
             return temp;
         }
 
