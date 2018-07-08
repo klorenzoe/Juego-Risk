@@ -12,7 +12,7 @@ namespace simplyRiskGame.Controllers
         public static CountriesManager manager = new CountriesManager();
         public Excel fileManager = new Excel();
         public int[] rowNumbers = {2, 2, 2 };
-        public string path = ""; 
+        public string path = "C:/Users/Diego Pérez Moir/Downloads/dataSet.xlsx"; 
 
         public HomeController() {
             
@@ -392,7 +392,9 @@ namespace simplyRiskGame.Controllers
             var country1 = 0;
             var country2 = 0;
             string troopsNumber = data[2];
-            string values = ""; 
+            string values = "";
+
+            
 
             for (int i = 1; i <= manager.Countries.Count; i++)
             {
@@ -407,8 +409,33 @@ namespace simplyRiskGame.Controllers
                     country2 = manager.Countries[i].CountryID;        
             }
             // look if the countries are neighbors
-            
-            if(manager.getNeighborsAlly(country1, manager.Countries[country1].Owner).Contains(country2))
+            int[] troops = manager.getNeighborsTroopsCount(country1, manager.Countries[country1].Owner);
+            if(manager.Countries[country1].Owner == 1)
+            {
+                fileManager.Open(path, 2);
+                fileManager.Write(rowNumbers[1], "A", country1.ToString());
+                fileManager.Write(rowNumbers[1], "B", manager.Countries[country1].TroopsCount.ToString());
+                fileManager.Write(rowNumbers[1], "C", manager.CalulateDistanceDijkstra(country1, country2).ToString());
+                fileManager.Write(rowNumbers[1], "D", troops[0].ToString());
+                fileManager.Write(rowNumbers[1], "E", troops[2].ToString());
+                fileManager.Write(rowNumbers[1], "H", country2.ToString());
+                fileManager.Write(rowNumbers[1], "I", data[2]);
+                fileManager.Close();
+                rowNumbers[1]++;
+            }
+            else
+            {
+                fileManager.Open(path, 3);
+                fileManager.Write(rowNumbers[2], "A", country1.ToString());
+                fileManager.Write(rowNumbers[2], "B", manager.Countries[country1].TroopsCount.ToString());
+                fileManager.Write(rowNumbers[2], "C", troops[0].ToString());
+                fileManager.Write(rowNumbers[2], "D", troops[2].ToString());
+                fileManager.Write(rowNumbers[2], "G", country2.ToString());
+                fileManager.Write(rowNumbers[2], "H", data[2]);
+                fileManager.Close();
+                rowNumbers[2]++;
+            }
+            if (manager.getNeighborsAlly(country1, manager.Countries[country1].Owner).Contains(country2))
             {
                 manager.Countries[country2].TroopsCount += int.Parse(data[2]);
                 values = "1";
@@ -432,7 +459,9 @@ namespace simplyRiskGame.Controllers
             }
             // values = one if the country was conquered + id deployer + deployer remaining troops + id receiver + receiver remaining troops + player
             values += "|" + country1 + "|" + manager.Countries[country1].TroopsCount + "|" + country2 + "|" +
-               manager.Countries[country2].TroopsCount + "|" + manager.Countries[country1].Owner; 
+               manager.Countries[country2].TroopsCount + "|" + manager.Countries[country1].Owner;
+            
+
             return Json(new { _values = values });
         }
 
@@ -440,11 +469,24 @@ namespace simplyRiskGame.Controllers
         public ActionResult getNewTroops(string _data)// ID, Troops count
         {
             string[] temp = _data.Split('|');
+            int id = int.Parse(temp[0]);
+            int[] neighbors = manager.getNeighborsCount(id, manager.Countries[id].Owner);
+            int[] troops = manager.getNeighborsTroopsCount(int.Parse(temp[0]), manager.Countries[int.Parse(temp[0])].Owner);
+            int priority = int.Parse(temp[0]) * manager.TroopdforAssign(1) / 100;
             manager.Countries[Convert.ToInt16(temp[0])].TroopsCount = Convert.ToInt16(temp[1]);
             fileManager.Open(path, 1);
             fileManager.Write(rowNumbers[0], "A", temp[0]);
             fileManager.Write(rowNumbers[0], "B", temp[1]);
+            fileManager.Write(rowNumbers[0], "C", manager.TroopdforAssign(1).ToString());
+            fileManager.Write(rowNumbers[0], "D", manager.getDistance(id).ToString());
+            fileManager.Write(rowNumbers[0], "E", neighbors[1].ToString());
+            fileManager.Write(rowNumbers[0], "F", neighbors[0].ToString());
+            fileManager.Write(rowNumbers[0], "G", neighbors[2].ToString());
+            fileManager.Write(rowNumbers[0], "H", troops[2].ToString());
+            fileManager.Write(rowNumbers[0], "I",  troops[0].ToString());
+            fileManager.Write(rowNumbers[0], "K", priority.ToString()); 
             fileManager.Close();
+            rowNumbers[0]++; 
             
             return Json(new { something = true });
         }
@@ -516,9 +558,6 @@ namespace simplyRiskGame.Controllers
         {
             ViewBag.myTroopLimit = manager.TroopdforAssign(1);
             ViewBag.IATroopLimit = manager.TroopdforAssign(2);
-            fileManager.Open(path, 1);
-            fileManager.Write(rowNumbers[0], "C", manager.TroopdforAssign(1).ToString());
-            fileManager.Close();
             return Json(new { succes = true });
         }
 
