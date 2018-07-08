@@ -11,8 +11,8 @@ namespace simplyRiskGame.Controllers
     {
         public static CountriesManager manager = new CountriesManager();
         public Excel fileManager = new Excel();
-        public int[] rowNumbers = {2, 2, 2 };
-        public string path = "C:/Users/Diego Pérez Moir/Downloads/dataSet.xlsx"; 
+        public int[] rowNumbers = new int[3];
+        public string path = "D:/GitHub/SECOND/Juego-Risk/dataSet.xlsx"; 
 
         public HomeController() {
             
@@ -27,268 +27,274 @@ namespace simplyRiskGame.Controllers
 
         private bool nearbyCountry(int actualCountry, int nearCountry)
         {
-            bool verifyNearbyCountry = false;
+            if (manager.Countries[actualCountry].Neighborsint.Contains(nearCountry))
+                return true;
+            return false;
 
-            switch (actualCountry)
-            {
-                case 1:
-                    if (nearCountry == 2 || nearCountry == 6 || nearCountry == 32)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 2:
-                    if (nearCountry == 1 || nearCountry == 6 || nearCountry == 7 || nearCountry == 9)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 3:
-                    if (nearCountry == 9 || nearCountry == 4 || nearCountry == 13)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 4:
-                    if (nearCountry == 9 || nearCountry == 3 || nearCountry == 7 || nearCountry == 8)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 5:
-                    if (nearCountry == 6 || nearCountry == 7 || nearCountry == 8 || nearCountry == 21)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 6:
-                    if (nearCountry == 1 || nearCountry == 2 || nearCountry == 7 || nearCountry == 5)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 7:
-                    if (nearCountry == 5 || nearCountry == 6 || nearCountry == 2 || nearCountry == 9 || nearCountry == 4 || nearCountry == 8)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 8:
-                    if (nearCountry == 5 || nearCountry == 4 || nearCountry == 7)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 9:
-                    if (nearCountry == 2 || nearCountry == 4 || nearCountry == 3 || nearCountry == 7)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 10:
-                    if (nearCountry == 12 || nearCountry == 11)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 11:
-                    if (nearCountry == 10 || nearCountry == 12 || nearCountry == 13 || nearCountry == 18)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 12:
-                    if (nearCountry == 10 || nearCountry == 11 || nearCountry == 13)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 13:
-                    if (nearCountry == 3 || nearCountry == 12 || nearCountry == 11)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 14:
-                    if (nearCountry == 19 || nearCountry == 15 || nearCountry == 18)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 15:
-                    if (nearCountry == 17 || nearCountry == 19 || nearCountry == 14 || nearCountry == 18 || nearCountry == 16)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 16:
-                    if (nearCountry == 24 || nearCountry == 18 || nearCountry == 15 || nearCountry == 33)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 17:
-                    if (nearCountry == 19 || nearCountry == 15)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 18:
-                    if (nearCountry == 11 || nearCountry == 26 || nearCountry == 24 || nearCountry == 14 || nearCountry == 15 || nearCountry == 16)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 19:
-                    if (nearCountry == 14 || nearCountry == 15 || nearCountry == 17)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 20:
-                    if (nearCountry == 26 || nearCountry == 22 || nearCountry == 23 || nearCountry == 21)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 21:
-                    if (nearCountry == 5 || nearCountry == 20 || nearCountry == 23)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 22:
-                    if (nearCountry == 26 || nearCountry == 24 || nearCountry == 25 || nearCountry == 23 || nearCountry == 20)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 23:
-                    if (nearCountry == 21 || nearCountry == 20 || nearCountry == 22 || nearCountry == 25)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 24:
-                    if (nearCountry == 18 || nearCountry == 16 || nearCountry == 26 || nearCountry == 22 || nearCountry == 25 || nearCountry == 33)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 25:
-                    if (nearCountry == 23 || nearCountry == 22 || nearCountry == 24 || nearCountry == 33 || nearCountry == 27 || nearCountry == 37)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 26:
-                    if (nearCountry == 18 || nearCountry == 20 || nearCountry == 22 || nearCountry == 24)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 27:
-                    if (nearCountry == 25 || nearCountry == 33 || nearCountry == 37 || nearCountry == 28 || nearCountry == 29)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 28:
-                    if (nearCountry == 34 || nearCountry == 35 || nearCountry == 27 || nearCountry == 29)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 29:
-                    if (nearCountry == 33 || nearCountry == 27 || nearCountry == 28 || nearCountry == 35)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 30:
-                    if (nearCountry == 32 || nearCountry == 38 || nearCountry == 36 || nearCountry == 34)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 31:
-                    if (nearCountry == 32 || nearCountry == 34)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 32:
-                    if (nearCountry == 1 || nearCountry == 38 || nearCountry == 30 || nearCountry == 34 || nearCountry == 31)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 33:
-                    if (nearCountry == 16 || nearCountry == 24 || nearCountry == 25 || nearCountry == 27 || nearCountry == 29)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 34:
-                    if (nearCountry == 30 || nearCountry == 31 || nearCountry == 32 || nearCountry == 36 || nearCountry == 28)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 35:
-                    if (nearCountry == 28 || nearCountry == 29 || nearCountry == 40)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 36:
-                    if (nearCountry == 37 || nearCountry == 38 || nearCountry == 30 || nearCountry == 28 || nearCountry == 34)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 37:
-                    if (nearCountry == 25 || nearCountry == 27 || nearCountry == 28 || nearCountry == 36)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 38:
-                    if (nearCountry == 32 || nearCountry == 30 || nearCountry == 36)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 39:
-                    if (nearCountry == 42 || nearCountry == 41)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 40:
-                    if (nearCountry == 42 || nearCountry == 41 || nearCountry == 35)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 41:
-                    if (nearCountry == 40 || nearCountry == 42 || nearCountry == 39)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                case 42:
-                    if (nearCountry == 40 || nearCountry == 41 || nearCountry == 39)
-                    {
-                        verifyNearbyCountry = true;
-                    }
-                    break;
-                default:
-                    verifyNearbyCountry = false;
-                    break;
-            }
+            #region  switch
+            //bool verifyNearbyCountry = false;
+            //switch (actualCountry)
+            //{
+            //    case 1:
+            //        if (nearCountry == 2 || nearCountry == 6 || nearCountry == 32)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 2:
+            //        if (nearCountry == 1 || nearCountry == 6 || nearCountry == 7 || nearCountry == 9)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 3:
+            //        if (nearCountry == 9 || nearCountry == 4 || nearCountry == 13)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 4:
+            //        if (nearCountry == 9 || nearCountry == 3 || nearCountry == 7 || nearCountry == 8)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 5:
+            //        if (nearCountry == 6 || nearCountry == 7 || nearCountry == 8 || nearCountry == 21)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 6:
+            //        if (nearCountry == 1 || nearCountry == 2 || nearCountry == 7 || nearCountry == 5)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 7:
+            //        if (nearCountry == 5 || nearCountry == 6 || nearCountry == 2 || nearCountry == 9 || nearCountry == 4 || nearCountry == 8)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 8:
+            //        if (nearCountry == 5 || nearCountry == 4 || nearCountry == 7)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 9:
+            //        if (nearCountry == 2 || nearCountry == 4 || nearCountry == 3 || nearCountry == 7)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 10:
+            //        if (nearCountry == 12 || nearCountry == 11)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 11:
+            //        if (nearCountry == 10 || nearCountry == 12 || nearCountry == 13 || nearCountry == 18)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 12:
+            //        if (nearCountry == 10 || nearCountry == 11 || nearCountry == 13)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 13:
+            //        if (nearCountry == 3 || nearCountry == 12 || nearCountry == 11)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 14:
+            //        if (nearCountry == 19 || nearCountry == 15 || nearCountry == 18)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 15:
+            //        if (nearCountry == 17 || nearCountry == 19 || nearCountry == 14 || nearCountry == 18 || nearCountry == 16)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 16:
+            //        if (nearCountry == 24 || nearCountry == 18 || nearCountry == 15 || nearCountry == 33)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 17:
+            //        if (nearCountry == 19 || nearCountry == 15)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 18:
+            //        if (nearCountry == 11 || nearCountry == 26 || nearCountry == 24 || nearCountry == 14 || nearCountry == 15 || nearCountry == 16)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 19:
+            //        if (nearCountry == 14 || nearCountry == 15 || nearCountry == 17)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 20:
+            //        if (nearCountry == 26 || nearCountry == 22 || nearCountry == 23 || nearCountry == 21)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 21:
+            //        if (nearCountry == 5 || nearCountry == 20 || nearCountry == 23)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 22:
+            //        if (nearCountry == 26 || nearCountry == 24 || nearCountry == 25 || nearCountry == 23 || nearCountry == 20)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 23:
+            //        if (nearCountry == 21 || nearCountry == 20 || nearCountry == 22 || nearCountry == 25)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 24:
+            //        if (nearCountry == 18 || nearCountry == 16 || nearCountry == 26 || nearCountry == 22 || nearCountry == 25 || nearCountry == 33)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 25:
+            //        if (nearCountry == 23 || nearCountry == 22 || nearCountry == 24 || nearCountry == 33 || nearCountry == 27 || nearCountry == 37)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 26:
+            //        if (nearCountry == 18 || nearCountry == 20 || nearCountry == 22 || nearCountry == 24)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 27:
+            //        if (nearCountry == 25 || nearCountry == 33 || nearCountry == 37 || nearCountry == 28 || nearCountry == 29)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 28:
+            //        if (nearCountry == 34 || nearCountry == 35 || nearCountry == 27 || nearCountry == 29)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 29:
+            //        if (nearCountry == 33 || nearCountry == 27 || nearCountry == 28 || nearCountry == 35)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 30:
+            //        if (nearCountry == 32 || nearCountry == 38 || nearCountry == 36 || nearCountry == 34)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 31:
+            //        if (nearCountry == 32 || nearCountry == 34)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 32:
+            //        if (nearCountry == 1 || nearCountry == 38 || nearCountry == 30 || nearCountry == 34 || nearCountry == 31)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 33:
+            //        if (nearCountry == 16 || nearCountry == 24 || nearCountry == 25 || nearCountry == 27 || nearCountry == 29)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 34:
+            //        if (nearCountry == 30 || nearCountry == 31 || nearCountry == 32 || nearCountry == 36 || nearCountry == 28)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 35:
+            //        if (nearCountry == 28 || nearCountry == 29 || nearCountry == 40)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 36:
+            //        if (nearCountry == 37 || nearCountry == 38 || nearCountry == 30 || nearCountry == 28 || nearCountry == 34)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 37:
+            //        if (nearCountry == 25 || nearCountry == 27 || nearCountry == 28 || nearCountry == 36)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 38:
+            //        if (nearCountry == 32 || nearCountry == 30 || nearCountry == 36)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 39:
+            //        if (nearCountry == 42 || nearCountry == 41)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 40:
+            //        if (nearCountry == 42 || nearCountry == 41 || nearCountry == 35)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 41:
+            //        if (nearCountry == 40 || nearCountry == 42 || nearCountry == 39)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    case 42:
+            //        if (nearCountry == 40 || nearCountry == 41 || nearCountry == 39)
+            //        {
+            //            verifyNearbyCountry = true;
+            //        }
+            //        break;
+            //    default:
+            //        verifyNearbyCountry = false;
+            //        break;
+            //}
 
-            return verifyNearbyCountry;
+            //return verifyNearbyCountry;
+            #endregion
+
         }
 
 
@@ -413,6 +419,7 @@ namespace simplyRiskGame.Controllers
             if(manager.Countries[country1].Owner == 1)
             {
                 fileManager.Open(path, 2);
+                rowNumbers[1] = fileManager.getRowNumber();
                 fileManager.Write(rowNumbers[1], "A", country1.ToString());
                 fileManager.Write(rowNumbers[1], "B", manager.Countries[country1].TroopsCount.ToString());
                 fileManager.Write(rowNumbers[1], "C", manager.CalulateDistanceDijkstra(country1, country2).ToString());
@@ -420,18 +427,21 @@ namespace simplyRiskGame.Controllers
                 fileManager.Write(rowNumbers[1], "E", troops[2].ToString());
                 fileManager.Write(rowNumbers[1], "H", country2.ToString());
                 fileManager.Write(rowNumbers[1], "I", data[2]);
+                fileManager.Save();
                 fileManager.Close();
                 rowNumbers[1]++;
             }
             else
             {
                 fileManager.Open(path, 3);
+                rowNumbers[2] = fileManager.getRowNumber();
                 fileManager.Write(rowNumbers[2], "A", country1.ToString());
                 fileManager.Write(rowNumbers[2], "B", manager.Countries[country1].TroopsCount.ToString());
                 fileManager.Write(rowNumbers[2], "C", troops[0].ToString());
                 fileManager.Write(rowNumbers[2], "D", troops[2].ToString());
                 fileManager.Write(rowNumbers[2], "G", country2.ToString());
                 fileManager.Write(rowNumbers[2], "H", data[2]);
+                fileManager.Save();
                 fileManager.Close();
                 rowNumbers[2]++;
             }
@@ -472,9 +482,10 @@ namespace simplyRiskGame.Controllers
             int id = int.Parse(temp[0]);
             int[] neighbors = manager.getNeighborsCount(id, manager.Countries[id].Owner);
             int[] troops = manager.getNeighborsTroopsCount(int.Parse(temp[0]), manager.Countries[int.Parse(temp[0])].Owner);
-            int priority = int.Parse(temp[0]) * manager.TroopdforAssign(1) / 100;
+            int priority = int.Parse(temp[1]) * manager.TroopdforAssign(1) / 100;
             manager.Countries[Convert.ToInt16(temp[0])].TroopsCount = Convert.ToInt16(temp[1]);
             fileManager.Open(path, 1);
+            rowNumbers[0] = fileManager.getRowNumber();
             fileManager.Write(rowNumbers[0], "A", temp[0]);
             fileManager.Write(rowNumbers[0], "B", temp[1]);
             fileManager.Write(rowNumbers[0], "C", manager.TroopdforAssign(1).ToString());
@@ -484,7 +495,8 @@ namespace simplyRiskGame.Controllers
             fileManager.Write(rowNumbers[0], "G", neighbors[2].ToString());
             fileManager.Write(rowNumbers[0], "H", troops[2].ToString());
             fileManager.Write(rowNumbers[0], "I",  troops[0].ToString());
-            fileManager.Write(rowNumbers[0], "K", priority.ToString()); 
+            fileManager.Write(rowNumbers[0], "K", priority.ToString());
+            fileManager.Save();
             fileManager.Close();
             rowNumbers[0]++; 
             

@@ -26,10 +26,24 @@ namespace simplyRiskGame.Models
         public void Write(int rowNumber, string columnLetter, string value)
         {
             workSheet.Cells[rowNumber, columnLetter] = value;
+            
+        }
+
+        public void Save() {
             workBook.Save();
         }
 
-        
+
+       
+
+        public int getRowNumber() {
+            int i = 1;
+            while (true) {
+                i++;
+                if (workSheet.Cells[i, "A"].Value == null)
+                    return i;
+            }
+        }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int GetWindowThreadProcessId(int handle, out int processId);
