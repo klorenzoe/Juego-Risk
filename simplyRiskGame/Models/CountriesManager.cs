@@ -12,6 +12,8 @@ namespace simplyRiskGame.Models
     {
         public Dictionary<int, Country> Countries = new Dictionary<int, Country>();
         public Graph<int, string> CountriesGraph = new Graph<int, string>();
+        public DecisionTree Decisions = new DecisionTree();
+
 
         public CountriesManager()
         {
@@ -71,6 +73,14 @@ namespace simplyRiskGame.Models
            // SetCountriesGraph();
         }
 
+        #region Tree
+
+
+
+        #endregion
+
+        #region Stuff 
+
         public void UpdateCountriesList()
         {
             for (int i = 1; i <= Countries.Count(); i++)//update countries list
@@ -98,16 +108,6 @@ namespace simplyRiskGame.Models
             return t;
         }
 
-        //public List<Country> getPlayerCountries(int player) // number of the player who owns that country, 0 if its neutral 
-        //{
-        //    List <Country> t = new List<Country>(); //countries ids list
-        //    for (int i = 1; i <= Countries.Count(); i++)
-        //    {
-        //        if (Countries[i].Owner == player)
-        //            t.Add(Countries[i]);
-        //    }
-        //    return t;
-        //}
 
         public List<string> getNeighborsstr(string countryName)
         {
@@ -197,6 +197,7 @@ namespace simplyRiskGame.Models
             }
             return t;
         }
+#endregion
 
 
         #region Dijkstra

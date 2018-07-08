@@ -11,7 +11,6 @@ namespace simplyRiskGame.Controllers
     {
         public static CountriesManager manager = new CountriesManager();
 
-        public Excel fileManager = new Excel();
         public int[] rowNumbers = new int[3];
         public string path = "D:/GitHub/SECOND/Juego-Risk/dataSet.xlsx"; 
         public static List<int> initialiceCountries = new List<int>();
@@ -424,31 +423,12 @@ namespace simplyRiskGame.Controllers
             int[] troops = manager.getNeighborsTroopsCount(country1, manager.Countries[country1].Owner);
             if(manager.Countries[country1].Owner == 1)
             {
-                fileManager.Open(path, 2);
-                rowNumbers[1] = fileManager.getRowNumber();
-                fileManager.Write(rowNumbers[1], "A", country1.ToString());
-                fileManager.Write(rowNumbers[1], "B", manager.Countries[country1].TroopsCount.ToString());
-                fileManager.Write(rowNumbers[1], "C", manager.CalulateDistanceDijkstra(country1, country2).ToString());
-                fileManager.Write(rowNumbers[1], "D", troops[0].ToString());
-                fileManager.Write(rowNumbers[1], "E", troops[2].ToString());
-                fileManager.Write(rowNumbers[1], "H", country2.ToString());
-                fileManager.Write(rowNumbers[1], "I", data[2]);
-                fileManager.Save();
-                fileManager.Close();
+
                 rowNumbers[1]++;
             }
             else
             {
-                fileManager.Open(path, 3);
-                rowNumbers[2] = fileManager.getRowNumber();
-                fileManager.Write(rowNumbers[2], "A", country1.ToString());
-                fileManager.Write(rowNumbers[2], "B", manager.Countries[country1].TroopsCount.ToString());
-                fileManager.Write(rowNumbers[2], "C", troops[0].ToString());
-                fileManager.Write(rowNumbers[2], "D", troops[2].ToString());
-                fileManager.Write(rowNumbers[2], "G", country2.ToString());
-                fileManager.Write(rowNumbers[2], "H", data[2]);
-                fileManager.Save();
-                fileManager.Close();
+
                 rowNumbers[2]++;
             }
             if (manager.getNeighborsAlly(country1, manager.Countries[country1].Owner).Contains(country2))
@@ -490,20 +470,7 @@ namespace simplyRiskGame.Controllers
             int[] troops = manager.getNeighborsTroopsCount(int.Parse(temp[0]), manager.Countries[int.Parse(temp[0])].Owner);
             int priority = int.Parse(temp[1]) * manager.TroopdforAssign(1) / 100;
             manager.Countries[Convert.ToInt16(temp[0])].TroopsCount = Convert.ToInt16(temp[1]);
-            fileManager.Open(path, 1);
-            rowNumbers[0] = fileManager.getRowNumber();
-            fileManager.Write(rowNumbers[0], "A", temp[0]);
-            fileManager.Write(rowNumbers[0], "B", temp[1]);
-            fileManager.Write(rowNumbers[0], "C", manager.TroopdforAssign(1).ToString());
-            fileManager.Write(rowNumbers[0], "D", manager.getDistance(id).ToString());
-            fileManager.Write(rowNumbers[0], "E", neighbors[1].ToString());
-            fileManager.Write(rowNumbers[0], "F", neighbors[0].ToString());
-            fileManager.Write(rowNumbers[0], "G", neighbors[2].ToString());
-            fileManager.Write(rowNumbers[0], "H", troops[2].ToString());
-            fileManager.Write(rowNumbers[0], "I",  troops[0].ToString());
-            fileManager.Write(rowNumbers[0], "K", priority.ToString());
-            fileManager.Save();
-            fileManager.Close();
+
             rowNumbers[0]++; 
             
             return Json(new { something = true });
