@@ -339,7 +339,7 @@ namespace simplyRiskGame.Controllers
             {
                 int temp = 0;
                 temp = random.Next(1, 42);
-                if (nearbyCountry(countryNumberPlayer, temp) == true && !countriesPlayer.Contains(temp))
+                if (nearbyCountry(countryNumberPlayer, temp) && !countriesPlayer.Contains(temp))
                 {
                     countriesPlayer[i] = temp;
                 }
@@ -371,7 +371,7 @@ namespace simplyRiskGame.Controllers
             {
                 int temp = 0;
                 temp = random.Next(1, 42);
-                if (nearbyCountry(countryNumberIA, temp) == true && !countriesPlayer.Contains(temp) && !countriesIA.Contains(temp))
+                if (nearbyCountry(countryNumberIA, temp) && !countriesPlayer.Contains(temp) && !countriesIA.Contains(temp))
                 {
                     countriesIA[i] = temp;
                 }
