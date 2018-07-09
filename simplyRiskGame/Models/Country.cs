@@ -15,7 +15,10 @@ namespace simplyRiskGame.Models
         public int CountryID { get; set; }
         public int TroopsCount { get; set; }
         public int Owner { get; set; } // number of the player who owns that country, 0 if its neutral 
-        public List<Country> Neighbors = new List<Country>();
+        /// <summary>
+        /// Never use this, doesnt work
+        /// </summary>
+        public List<Country> Neighbors = new List<Country>(); 
         public List<int> Neighborsint = new List<int>();
 
         Random rnd = new Random();

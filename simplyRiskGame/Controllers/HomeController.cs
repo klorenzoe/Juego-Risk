@@ -549,9 +549,9 @@ namespace simplyRiskGame.Controllers
 
 
         /*
-         *1) llenar los países Iniciales y neutros de tropas iniciales. (Yulisa)
-          2) Desbloquear la barra(Sebas)*
-          3) Cuadrito que diga cuantas tropas tengo disponibles. (Oso)*
+          1) Colocar lineas de union entre paises (vista)
+          2) Cambiar el turno de la IA para que reciba comandos
+          3) 
           4)
 
          */
