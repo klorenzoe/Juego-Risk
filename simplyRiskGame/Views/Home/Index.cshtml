@@ -1327,9 +1327,9 @@
                     </svg>
                 </div>
 
-                <div style="background-color:#F2B035" id="movementMenu">
+                <div style="background-color:#33ccff" id="movementMenu">
                     <br />
-                    <div align="center" style="font-family:Algerian">
+                    <div align="center" style="font-family:'Century Gothic'">
                         <text class="col-md-12">Ataque - Desplazos</text>
                         <select id="country1">
                         </select>
@@ -1339,11 +1339,9 @@
 
                         <text>Número de tropas</text>
                         <select id="NumTroops">
-                            <option>0</option>
-                            <option>1</option>
-                            <option>2</option>
+                           
                         </select>
-                        <small> <button class="btn" style="background-color:#FF225A"><i class="fa fa-arrow-circle-o-right" style="font-size:24px; color:white"> </i> <text style="color:white"></text></button></small>
+                        <small> <button class="btn" style="background-color:#FF225A" id="redButton"><i class="fa fa-arrow-circle-o-right" style="font-size:24px; color:white"> </i> <text style="color:white"></text></button></small>
                     </div>
                     <br />
                 </div>
@@ -1363,39 +1361,99 @@
         var troops; //<--- is an auxiliary variable.
         var player =1;
         var isAssignment = true;
-        Troops();
+        var commitMovements ="";
+        paintInitialTroops(myColor,enemyColor);
         $("#movementMenu").hide();
         document.getElementById("troopsToDeploy").value = troopLimit;
-        paintInitialTroops(myColor,enemyColor);
+        
 
         $('#IATurn').click(function (event) {
             event.preventDefault();
+            $("#movementMenu").hide();
             troopLimit = @ViewBag.IATroopLimit;
             document.getElementById("troopsToDeploy").value = troopLimit;
             $("#movementMenu").hide();
             player = 2;
             isAssignment = true;
+            $("#country1 option").remove();
+            $("#country2 option").remove();
+            $("#NumTroops option").remove();
         });
 
-        $('#Commit').click(function (event) {
+        $('#commit').click(function(event) {
+            debugger;
             event.preventDefault();
+            commitMovements = commitMovements.substring(0, commitMovements.length - 1);
+            var movementsArray = commitMovements.split('*');
+            commitMovements="";
+            debugger;
+            movementsArray.forEach(function(m){
+                debugger;
+                var features = m.split('|');
+                // values = one if the country was conquered(0) + id deployer(1) + deployer remaining troops(2) + id receiver(3) + receiver remaining troops(4) + player(5)
+                if(!(movementsArray[0] == "")){
+                    $(equivalences[features[1]].text).text(features[2]);
+                    $(equivalences[features[3]].text).text(features[4]);
 
+                    if(features[0]==1){
+                        paintOneTroop(features[5], features[3]);
+                    }
+                }
+                
+                
+            });
             $.ajax({
                 url: "/Home/assignTroops",
                 type: "POST",
                 data: {},
                 success: function (data) {
+                    debugger;
                     troopLimit = @ViewBag.myTroopLimit;
+                    player = 1;
+                    $("#troopsToDeploy").val(troopLimit);
+                    isAssignment = true;
                 }
             });
+            $("#movementMenu").hide();
+            $("#country1 option").remove();
+            $("#country2 option").remove();
+            $("#NumTroops option").remove();
         });
+
+
         //Remaining troops to deploy
+        //Attaking n' movement stuff
+        $("#redButton").click(function (event) {
+            event.preventDefault();
+            debugger;
+            var information = $("#country1 option:selected").text();
+            console.log(information);
+            information += "|" + $("#country2 option:selected").text();
+            console.log(information);
+            information += "|" + $("#NumTroops option:selected").text();
+            console.log(information);
+            $.ajax({
+                url: "/Home/getMovementLogbook",
+                type: "POST",
+                data: { _data: information },
+                success: function (data) {
+                    debugger;
+                    commitMovements += data._values +"*"
+                    return true; 
+                }
+
+            });
+            $("#country1 option:selected").remove();
+            $("#country2 option:selected").remove();
+            $("#NumTroops option:selected").remove();
+        })
 
 
         //alaska
         $("#alaska").click(function (event) {
+            debugger;
             event.preventDefault();
-            if (isAssignment) {
+             if (isAssignment) {
                 //evaluate if a contry is mine
                 $.ajax({
                     url: "/Home/isTheCountryMine",
@@ -1403,7 +1461,6 @@
                     data: { player:player, country:1},
                     success: function (data) {
                         if (troopLimit > 0 && data.belongs) {
-
                             troops = Number($('#alaskaText').text()) + 1;
                             newTroopsAssign(1, troops);
                             $('#alaskaText').text(troops);
@@ -1428,13 +1485,14 @@
         //alberta
         $("#alberta").click(function (event) {
             event.preventDefault();
+            debugger;
             if(isAssignment){
                 $.ajax({
                     url: "/Home/isTheCountryMine",
                     type: "POST",
                     data: { player:player, country:2},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#albertaText').text()) + 1;
                             newTroopsAssign(2, troops);
                             $('#albertaText').text(troops);
@@ -1458,6 +1516,7 @@
 
         //easternUnitedStated
         $("#easternUnitedStates").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1465,7 +1524,7 @@
                     type: "POST",
                     data: { player:player, country:4},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#easternUnitedStatesText').text()) + 1;
                             newTroopsAssign(4, troops);
                             $('#easternUnitedStatesText').text(troops);
@@ -1489,6 +1548,7 @@
 
         //groendlandia
         $("#groendlandia").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1496,7 +1556,7 @@
                     type: "POST",
                     data: { player:player, country:5},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#groendlandiaText').text()) + 1;
                             newTroopsAssign(5, troops);
                             $('#groendlandiaText').text(troops);
@@ -1521,13 +1581,14 @@
         //northeastTerritories
         $("#northeastTerritories").click(function (event) {
             event.preventDefault();
+            debugger;
             if(isAssignment){
                 $.ajax({
                     url: "/Home/isTheCountryMine",
                     type: "POST",
                     data: { player:player, country:6},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#northeastTerritoriesText').text()) + 1;
                             newTroopsAssign(6, troops);
                             $('#northeastTerritoriesText').text(troops);
@@ -1552,13 +1613,14 @@
         //northeastTerritories
         $("#ontario").click(function (event) {
             event.preventDefault();
+            debugger;
             if(isAssignment){
                 $.ajax({
                     url: "/Home/isTheCountryMine",
                     type: "POST",
                     data: { player:player, country:7},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#ontarioText').text()) + 1;
                             newTroopsAssign(7, troops);
                             $('#ontarioText').text(troops);
@@ -1583,13 +1645,14 @@
         //Quebec
         $("#quebec").click(function (event) {
             event.preventDefault();
+            debugger;
             if(isAssignment){
                 $.ajax({
                     url: "/Home/isTheCountryMine",
                     type: "POST",
                     data: { player:player, country:8},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#quebecText').text()) + 1;
                             newTroopsAssign(8, troops);
                             $('#quebecText').text(troops);
@@ -1614,6 +1677,7 @@
 
         //eUWest 9
         $("#eUWest").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1621,7 +1685,7 @@
                     type: "POST",
                     data: { player:player, country:9},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#eUWestText').text()) + 1;
                             newTroopsAssign(9, troops);
                             $('#eUWestText').text(troops);
@@ -1646,6 +1710,7 @@
 
         //Argentina 10
         $("#argentina").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1653,7 +1718,7 @@
                     type: "POST",
                     data: { player:player, country:10},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#argentinaText').text()) + 1;
                             newTroopsAssign(10, troops);
                             $('#argentinaText').text(troops);
@@ -1677,6 +1742,7 @@
 
         //Brazil 11
         $("#brazil").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1684,7 +1750,7 @@
                     type: "POST",
                     data: { player:player, country:11},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#brazilText').text()) + 1;
                             newTroopsAssign(11, troops);
                             $('#brazilText').text(troops);
@@ -1709,6 +1775,7 @@
 
         //Peru 12
         $("#peru").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1716,7 +1783,7 @@
                     type: "POST",
                     data: { player:player, country:12},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#peruText').text()) + 1;
                             newTroopsAssign(12, troops);
                             $('#peruText').text(troops);
@@ -1740,6 +1807,7 @@
 
         //venezuela 13
         $("#venezuela").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1747,7 +1815,7 @@
                     type: "POST",
                     data: { player:player, country:13},
                     success: function (data) {
-                        if (troopLimit > 0 && data.belongs) {
+                        if (troopLimit > 0 && data.belongs){
                             troops = Number($('#venezuelaText').text()) + 1;
                             newTroopsAssign(13, troops);
                             $('#venezuelaText').text(troops);
@@ -1772,6 +1840,7 @@
         //congo 14
         $("#congo").click(function (event) {
             event.preventDefault();
+            debugger;
             if(isAssignment){
                 $.ajax({
                     url: "/Home/isTheCountryMine",
@@ -1803,6 +1872,7 @@
         //eastAfrica 15
         $("#eastAfrica").click(function (event) {
             event.preventDefault();
+            debugger;
             if(isAssignment){
                 $.ajax({
                     url: "/Home/isTheCountryMine",
@@ -1833,6 +1903,7 @@
 
         //Egipt 16
         $("#egipt").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1864,6 +1935,7 @@
 
         //Madagascar 17
         $("#madagascar").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1895,6 +1967,7 @@
 
         //southAfrica 19
         $("#southAfrica").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1927,6 +2000,7 @@
 
         //northAfrica
         $("#northAfrica").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1958,6 +2032,7 @@
 
         //grandBretaña 20
         $("#grandBretaña").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -1990,6 +2065,7 @@
 
         //island 21
         $("#island").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2021,6 +2097,7 @@
 
         //polonia 22
         $("#northEurope").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2052,6 +2129,7 @@
 
         //escandinavia 23
         $("#escandinavia").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2084,6 +2162,7 @@
 
         //southEurope 24
         $("#southEurope").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2116,6 +2195,7 @@
 
         //ucrania 25
         $("#ucrania").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2148,6 +2228,7 @@
 
         //westernEurope 26
         $("#westernEurope").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2178,6 +2259,7 @@
 
         //afganistan 27
         $("#afganistan").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2209,6 +2291,7 @@
 
         //China 28
         $("#china").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2241,6 +2324,7 @@
         //india 29
         $("#india").click(function (event) {
             event.preventDefault();
+            debugger;
             if(isAssignment){
                 $.ajax({
                     url: "/Home/isTheCountryMine",
@@ -2270,6 +2354,7 @@
 
         //irkutsk 30
         $("#irkutsk").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2302,6 +2387,7 @@
         //japon 31
         $("#japan").click(function (event) {
             event.preventDefault();
+            debugger;
             if(isAssignment){
                 $.ajax({
                     url: "/Home/isTheCountryMine",
@@ -2332,6 +2418,7 @@
 
         //kamchatca 32
         $("#kamchatca").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2364,6 +2451,7 @@
 
         //middleEast 33
         $("#middleEast").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2395,6 +2483,7 @@
 
         //mongolia 34
         $("#mongolia").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2427,6 +2516,7 @@
 
         //slam 35
         $("#slam").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2457,6 +2547,7 @@
 
         //siberia 36
         $("#siberia").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2488,6 +2579,7 @@
 
         //ural 37
         $("#ural").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2519,6 +2611,7 @@
 
         //yakutska 38
         $("#yakutska").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2551,6 +2644,7 @@
 
         //easternAustralia 39
         $("#easternAustralia").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2583,6 +2677,7 @@
 
         //indonesia 40
         $("#indonesia").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2615,6 +2710,7 @@
 
         //nuevaGuinea 41
         $("#nuevaGuinea").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2647,6 +2743,7 @@
 
         //westerbAustralia 42
         $("#westerbAustralia").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2679,6 +2776,7 @@
 
         //mexico 3
         $("#mexico").click(function (event) {
+            debugger;
             event.preventDefault();
             if(isAssignment){
                 $.ajax({
@@ -2712,7 +2810,6 @@
 
         $('#country1').change(function(event) {
             event.preventDefault();
-            debugger;
             var e = document.getElementById("country1");
             var strSelected = e.options[e.selectedIndex].text;
             nearbyCountries(strSelected);
@@ -2725,7 +2822,7 @@
                 type: "POST",
                 data: { country : countryName },
                 success: function (data) {
-                    debugger;
+                    
                     getTroopsCount(data.number);
                 }
             });
@@ -2737,7 +2834,7 @@
                 type: "POST",
                 data: { troopsAmount : Availabletroops },
                 success: function (data) {
-                    debugger;
+                    
                     $("#NumTroops option").remove();
                     data.troopsOptions.forEach(function(t){
                         $('#NumTroops').append('<option>'+t+'</option>');
@@ -2746,16 +2843,14 @@
             });}
 
         function nearbyCountries(countryName){
-            debugger;
+            
             $.ajax({
                 url: "/Home/getNeighboor",
                 type: "POST",
                 data: { country : countryName },
                 success: function (data) {
-                    debugger;
                     $("#country2 option").remove();
                     data.Neighboor.forEach(function(c){
-                        debugger;
                         var res = c.split("|");
                         $('#country2').append('<option id="'+ res[0] +'">'+res[1]+'</option>');
                     });
@@ -2943,13 +3038,11 @@
 
 <script type="text/javascript">
     function paintInitialTroops(myColor, enemyColor){
-
         $.ajax({
             url: "/Home/initialCountries",
             type: "POST",
             data: {},
             success: function (data) {
-                debugger;
                 data.enemy.forEach(function(troop) {
                     $(equivalences[troop].circle).css({ fill: enemyColor });
                 });
@@ -2957,27 +3050,26 @@
                 data.player.forEach(function(troop) {
                     $(equivalences[troop].circle).css({ fill: myColor });
                 });
+                Troops();
             }
         });
     }
 
     function paintOneTroop(player, countryid){
-        if(player==1){ $(equivalences[countryid].circle).css({ fill: myColor });}
-        if(player==2){ $(equivalences[countryid].circle).css({ fill: enemyColor  });}
+        if(player==1){ $(equivalences[countryid].circle).css({ fill: '#FF4D61' });}
+        if(player==2){ $(equivalences[countryid].circle).css({ fill: '#0087FF'  });}
     }
 
     function playerCountries(playerr){
         var count = 0;
-        debugger;
+       
         $.ajax({
             url: "/Home/playerCountries",
             type: "POST",
             data: { player:playerr},
             success: function (data) {
-                debugger;
                 console.log(data);
                 data.countries.forEach(function(c){
-                    debugger;
                     var res = c.split("|");
                     $('#country1').append('<option id="'+ res[0] +'">'+res[1]+'</option>');
                      if(count==0){ 
@@ -3001,25 +3093,27 @@
         });
     }
 
-    function movementThingys() {
-        
-        var information = $("#country1 option:selected").text();
-        console.log(information);
-        information += $("#country2 option:selected").text();
-        console.log(information);
-        information += $("#NumTroops option:selected").text();
-        console.log(information);
-        $.ajax({
-            url: "/Home/getMovementLogbook",
-            type : "POST",
-            data: { _data: information },
-            success: function () {
-                console.log("fuck ");
-                return true;
-            }
+   
 
-        });
-    }
+    //function movementThingys() {
+        
+    //    var information = $("#country1 option:selected").text();
+    //    console.log(information);
+    //    information += $("#country2 option:selected").text();
+    //    console.log(information);
+    //    information += $("#NumTroops option:selected").text();
+    //    console.log(information);
+    //    $.ajax({
+    //        url: "/Home/getMovementLogbook",
+    //        type : "POST",
+    //        data: { _data: information },
+    //        success: function () {
+    //            console.log("fuck ");
+    //            return true;
+    //        }
+
+    //    });
+    //}
     function initialTroops(troops)
         {
             for (var i = 1; i <= 42; i++) {
@@ -3029,16 +3123,14 @@
         }
 
     function nearbyCountries(countryName){
-        debugger;
         $.ajax({
             url: "/Home/getNeighboor",
             type: "POST",
             data: { country : countryName },
             success: function (data) {
-                debugger;
+                
                 $("#country2 option").remove();
                 data.Neighboor.forEach(function(c){
-                    debugger;
                     var res = c.split("|");
                     $('#country2').append('<option id="'+ res[0] +'">'+res[1]+'</option>');
                 });
@@ -3088,6 +3180,5 @@
                 });
             }
         });
-        debugger;
     }
 </script>

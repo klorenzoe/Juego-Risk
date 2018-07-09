@@ -12,6 +12,8 @@ namespace simplyRiskGame.Models
     {
         public Dictionary<int, Country> Countries = new Dictionary<int, Country>();
         public Graph<int, string> CountriesGraph = new Graph<int, string>();
+        public DecisionTree Decisions = new DecisionTree();
+
 
         public CountriesManager()
         {
@@ -68,8 +70,16 @@ namespace simplyRiskGame.Models
             Countries.Add(42, new Country("Australia Occidental", 42, new List<int> { 40, 41, 39 }));
 
             UpdateCountriesList();
-            SetCountriesGraph();
+           // SetCountriesGraph();
         }
+
+        #region Tree
+
+
+
+        #endregion
+
+        #region Stuff 
 
         public void UpdateCountriesList()
         {
@@ -84,7 +94,6 @@ namespace simplyRiskGame.Models
             List<Country> t = new List<Country>();
             for (int i = 0; i < C.Neighborsint.Count(); i++)
                 t.Add(Countries[C.Neighborsint[i]]);
-
             return t;
         }
 
@@ -99,16 +108,6 @@ namespace simplyRiskGame.Models
             return t;
         }
 
-        //public List<Country> getPlayerCountries(int player) // number of the player who owns that country, 0 if its neutral 
-        //{
-        //    List <Country> t = new List<Country>(); //countries ids list
-        //    for (int i = 1; i <= Countries.Count(); i++)
-        //    {
-        //        if (Countries[i].Owner == player)
-        //            t.Add(Countries[i]);
-        //    }
-        //    return t;
-        //}
 
         public List<string> getNeighborsstr(string countryName)
         {
@@ -132,7 +131,6 @@ namespace simplyRiskGame.Models
             }
             return 0;
         }
-
         public int TroopdforAssign(int player)
         {
             int count = 0;
@@ -150,27 +148,105 @@ namespace simplyRiskGame.Models
             else
                 return 20;
         }
+        public List<int> getNeighborsAlly(int cpuntryID, int player)
+        {
+            List<int> temp = new List<int>();
+            for (int i = 0; i < Countries[cpuntryID].Neighborsint.Count(); i++)
+                if (Countries[Countries[cpuntryID].Neighborsint[i]].Owner == player)
+                    temp.Add(Countries[cpuntryID].Neighborsint[i]);
+            return temp;
+        }
+        /// <summary>
+        /// get the troops of the neighbors
+        /// </summary>
+        /// <param name="countryID"></param>
+        /// <param name="player"></param>
+        /// <returns> [neutral, ally, enemy]</returns>
+        public int[] getNeighborsTroopsCount(int countryID, int player)
+        {
+            int[] t = new int[3];
+            for (int i = 0; i < Countries[countryID].Neighborsint.Count(); i++)
+            {
+                if (Countries[Countries[countryID].Neighborsint[i]].Owner == 0)
+                    t[0] += Countries[Countries[countryID].Neighborsint[i]].TroopsCount;
+                else if(Countries[Countries[countryID].Neighborsint[i]].Owner == player)
+                    t[1] += Countries[Countries[countryID].Neighborsint[i]].TroopsCount;
+                else
+                    t[2] += Countries[Countries[countryID].Neighborsint[i]].TroopsCount;
+            }
+            return t;
+        }
+
+        /// <summary>
+        /// get the amount of neighbors of each kind
+        /// </summary>
+        /// <param name="countryID"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public int[] getNeighborsCount(int countryID, int player)
+        {
+            int[] t = new int[3];
+            for (int i = 0; i < Countries[countryID].Neighborsint.Count(); i++)
+            {
+                if (Countries[Countries[countryID].Neighborsint[i]].Owner == 0)
+                    t[0] ++;
+                else if (Countries[Countries[countryID].Neighborsint[i]].Owner == player)
+                    t[1] ++;
+                else
+                    t[2] ++;
+            }
+            return t;
+        }
+#endregion
+
 
         #region Dijkstra
         public void SetCountriesGraph()
         {
             for (int i = 1; i <= Countries.Count(); i++)
                 CountriesGraph.AddNode(i);
+            UInt16 to = 0;
+            int cost = 0;
+            
             for (int i = 1; i <= Countries.Count(); i++)
             {
                 for (int j = 0; j < Countries[i].Neighborsint.Count(); j++)
                 {
-                    CountriesGraph.Connect(Convert.ToUInt16(i), Convert.ToUInt16(Countries[i].Neighborsint[j]), Countries[Countries[i].Neighborsint[j]].TroopsCount, "fuck yeah");
+                    to = Convert.ToUInt16(Countries[i].Neighborsint[j]);
+                    cost = Countries[Countries[i].Neighborsint[j]].TroopsCount;
+                    CountriesGraph.Connect(Convert.ToUInt16(i-1), to , cost, "fuck yeah");
                 }
             }
         }
 
         public int CalulateDistanceDijkstra(int OriginCountry, int targetCountry)
         {
+            CountriesGraph = new Graph<int, string>();
+            SetCountriesGraph();
             var dijkstra = new Dijkstra<int, string>(CountriesGraph);
             IShortestPathResult result = dijkstra.Process(Convert.ToUInt16(OriginCountry), Convert.ToUInt16(targetCountry)); //result contains the shortest path
             return result.Distance;
         }
+
+        public int getDistance(int countryID)
+        {
+
+            int temp = 100;
+            
+            List<string> temporallsy = getPlayerCountries(2);
+            List<int> result = new List<int>();
+            
+            for (int i = 0; i < temporallsy.Count(); i++)
+            {
+                string[] temparr = temporallsy[i].Split('|');
+                result.Add(CalulateDistanceDijkstra(countryID, int.Parse(temparr[0]))); 
+                   
+            }
+            temp = result.Min(); 
+
+            return temp;
+        }
+
         #endregion
     }
 }
