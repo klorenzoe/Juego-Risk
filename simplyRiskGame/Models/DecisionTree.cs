@@ -84,13 +84,12 @@ namespace simplyRiskGame.Models
         {
             Countries = countries;
             List<string> movements = new List<string>();
-
             #region War phase
-            if (NearbyEnemies())
-            {
+            //if (NearbyEnemies())
+            //{
 
-                return movements;
-            }
+            //    return movements;
+            //}
             #endregion
             #region Peace times
             List<int> AICentre = getCentreBorderCountries(true); //move the troops from the inside
