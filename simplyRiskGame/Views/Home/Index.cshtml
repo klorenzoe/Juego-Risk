@@ -1365,7 +1365,7 @@
         paintInitialTroops(myColor,enemyColor);
         $("#movementMenu").hide();
         document.getElementById("troopsToDeploy").value = troopLimit;
-        
+
 
         $('#IATurn').click(function (event) {
             event.preventDefault();
@@ -1383,41 +1383,64 @@
         $('#commit').click(function(event) {
             debugger;
             event.preventDefault();
-            commitMovements = commitMovements.substring(0, commitMovements.length - 1);
-            var movementsArray = commitMovements.split('*');
-            commitMovements="";
-            debugger;
-            movementsArray.forEach(function(m){
-                debugger;
-                var features = m.split('|');
-                // values = one if the country was conquered(0) + id deployer(1) + deployer remaining troops(2) + id receiver(3) + receiver remaining troops(4) + player(5)
-                if(!(movementsArray[0] == "")){
-                    $(equivalences[features[1]].text).text(features[2]);
-                    $(equivalences[features[3]].text).text(features[4]);
-
-                    if(features[0]==1){
-                        paintOneTroop(features[5], features[3]);
-                    }
-                }
-                
-                
-            });
+            //oponent movement
             $.ajax({
-                url: "/Home/assignTroops",
+                url: "/Home/enemyMovements",
                 type: "POST",
                 data: {},
                 success: function (data) {
+                    //do machine movements
+
+                    //asignment troops
                     debugger;
-                    troopLimit = @ViewBag.myTroopLimit;
-                    player = 1;
-                    $("#troopsToDeploy").val(troopLimit);
-                    isAssignment = true;
+                    data.assign.forEach(function(u){
+                        debugger;
+                        var countryQuantity = u.split('|');
+                        assignTroopsEnemy(countryQuantity[0], countryQuantity[1]);
+                    });
+                    
+                    //movements
+                    debugger;
+                    commitMovements+=data.movements;
+
+                    //end machine movements
+
+                    //change the map with the player movements
+                    commitMovements = commitMovements.substring(0, commitMovements.length - 1);
+                    var movementsArray = commitMovements.split('*');
+                    commitMovements="";
+                    debugger;
+                    movementsArray.forEach(function(m){
+                        debugger;
+                        var features = m.split('|');
+                        // values = one if the country was conquered(0) + id deployer(1) + deployer remaining troops(2) + id receiver(3) + receiver remaining troops(4) + player(5)
+                        if(!(movementsArray[0] == "")){
+                            $(equivalences[features[1]].text).text(features[2]);
+                            $(equivalences[features[3]].text).text(features[4]);
+
+                            if(features[0]==1){
+                                paintOneTroop(features[5], features[3]);
+                            }
+                        }
+                    });
+                    $.ajax({
+                        url: "/Home/assignTroops",
+                        type: "POST",
+                        data: {},
+                        success: function (data) {
+                            debugger;
+                            troopLimit = @ViewBag.myTroopLimit;
+                            player = 1;
+                            $("#troopsToDeploy").val(troopLimit);
+                            isAssignment = true;
+                        }
+                    });
+                    $("#movementMenu").hide();
+                    $("#country1 option").remove();
+                    $("#country2 option").remove();
+                    $("#NumTroops option").remove();
                 }
             });
-            $("#movementMenu").hide();
-            $("#country1 option").remove();
-            $("#country2 option").remove();
-            $("#NumTroops option").remove();
         });
 
 
@@ -1435,11 +1458,11 @@
             $.ajax({
                 url: "/Home/getMovementLogbook",
                 type: "POST",
-                data: { _data: information },
+                data: { _data: information, player: true},
                 success: function (data) {
                     debugger;
                     commitMovements += data._values +"*"
-                    return true; 
+                    return true;
                 }
 
             });
@@ -2822,7 +2845,7 @@
                 type: "POST",
                 data: { country : countryName },
                 success: function (data) {
-                    
+
                     getTroopsCount(data.number);
                 }
             });
@@ -2834,7 +2857,7 @@
                 type: "POST",
                 data: { troopsAmount : Availabletroops },
                 success: function (data) {
-                    
+
                     $("#NumTroops option").remove();
                     data.troopsOptions.forEach(function(t){
                         $('#NumTroops').append('<option>'+t+'</option>');
@@ -2843,7 +2866,7 @@
             });}
 
         function nearbyCountries(countryName){
-            
+
             $.ajax({
                 url: "/Home/getNeighboor",
                 type: "POST",
@@ -2858,6 +2881,27 @@
             });
         }
     });
+
+    function assignTroopsEnemy(country, quantity){
+        var oldQuantity = $(equivalences[country].text).text();
+        var newQuantity = Number(oldQuantity) + Number(quantity);
+        $(equivalences[country].text).text(newQuantity);
+    
+    }
+
+    function EnemyMovements(enemyMovement){
+        $.ajax({
+            url: "/Home/getMovementLogbook",
+            type: "POST",
+            data: { _data: enemyMovement, player: false},
+            success: function (data) {
+                debugger;
+                commitMovements += data._values +"*"
+                return true;
+            }
+
+        });
+    }
 </script>
 
 

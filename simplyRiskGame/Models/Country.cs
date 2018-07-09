@@ -15,6 +15,7 @@ namespace simplyRiskGame.Models
         public int CountryID { get; set; }
         public int TroopsCount { get; set; }
         public int Owner { get; set; } // number of the player who owns that country, 0 if its neutral 
+
         /// <summary>
         /// Never use this, doesnt work
         /// </summary>
