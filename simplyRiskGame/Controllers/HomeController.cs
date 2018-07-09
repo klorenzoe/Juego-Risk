@@ -572,7 +572,7 @@ namespace simplyRiskGame.Controllers
 
             var result = "";
             foreach (var m in movements_) {
-                result = getMovementLogbook_(m)+"*";
+                result += getMovementLogbook_(m)+"*";
             }
 
 
