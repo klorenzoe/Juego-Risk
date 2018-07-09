@@ -68,9 +68,12 @@ namespace simplyRiskGame.Models
             int a = Convert.ToInt16(Math.Round(TroopsAvailable * 0.5, MidpointRounding.AwayFromZero)); //give the half to the nearest 
             int b = Convert.ToInt16(Math.Round(TroopsAvailable * 0.25, MidpointRounding.AwayFromZero));//give 1/4 for the other two nearest
 
+            //this maybe throw a end of index error
             movements.Add(PriorityAlliesIDs[0].ToString() + "|" + a.ToString());
             movements.Add(PriorityAlliesIDs[1].ToString() + "|" + b.ToString());
             movements.Add(PriorityAlliesIDs[2].ToString() + "|" + b.ToString());
+            if((TroopsAvailable - a -b- b) > 0)
+                movements.Add(PriorityAlliesIDs[3].ToString() + "|" + (TroopsAvailable - a - b - b).ToString());
 
             return movements;
             #endregion
@@ -114,8 +117,6 @@ namespace simplyRiskGame.Models
             return movements;
             #endregion
         }
-
-
 
         #region Important Stuff
 

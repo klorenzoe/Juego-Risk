@@ -405,8 +405,6 @@ namespace simplyRiskGame.Controllers
             string troopsNumber = data[2];
             string values = "";
 
-            
-
             for (int i = 1; i <= manager.Countries.Count; i++)
             {
                 //get deployer's country id
@@ -423,12 +421,10 @@ namespace simplyRiskGame.Controllers
             int[] troops = manager.getNeighborsTroopsCount(country1, manager.Countries[country1].Owner);
             if(manager.Countries[country1].Owner == 1)
             {
-
                 rowNumbers[1]++;
             }
             else
             {
-
                 rowNumbers[2]++;
             }
             if (manager.getNeighborsAlly(country1, manager.Countries[country1].Owner).Contains(country2))
