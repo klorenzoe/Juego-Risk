@@ -42,21 +42,27 @@ namespace simplyRiskGame.Models
                         totalEnemyTroops += countries[NeighborsIDs[i]].TroopsCount;
                     }
 
-                for (int i = 0; i < NearbyEnemiesIDs.Count(); i++)
+                if (totalEnemyTroops != 0)
                 {
-                    priority.Add(NearbyEnemiesIDs[i], (NearbyEnemiesTroopsCount[i] / totalEnemyTroops) * 100); // ID, percentage
-                }
-                var prioritylst = priority.Keys.ToList(); // id, percentage
-                prioritylst.Sort();
-
-                foreach (var key in prioritylst)
-                {
-                    if (TroopsAvailable != 0)
+                    for (int i = 0; i < NearbyEnemiesIDs.Count(); i++)
                     {
-                        temp = Convert.ToInt16(Math.Round(priority[key]/100 * TroopsAvailable, MidpointRounding.AwayFromZero));
-                       // movements.Add(key.ToString() + "|" + temp);
-                       movements.Add(getNearstFriendly(key).ToString() + "|" + temp);
+                        priority.Add(NearbyEnemiesIDs[i], (NearbyEnemiesTroopsCount[i] / totalEnemyTroops) * 100); // ID, percentage
                     }
+                    var prioritylst = priority.Keys.ToList(); // id, percentage
+                    prioritylst.Sort();
+
+                    foreach (var key in prioritylst)
+                    {
+                        temp = Convert.ToInt16(Math.Round(priority[key] / 100 * TroopsAvailable, MidpointRounding.AwayFromZero));
+                        // movements.Add(key.ToString() + "|" + temp);
+                        movements.Add(getNearstFriendly(key).ToString() + "|" + temp);
+                    }
+                    return movements;
+                }
+                else if(NearbyEnemiesIDs.Count() == 1)
+                {
+                    movements.Add(getNearstFriendly(NearbyEnemiesIDs[0]).ToString() + "|" + TroopsAvailable);
+                    return movements;
                 }
                 return movements;
             }
@@ -67,11 +73,22 @@ namespace simplyRiskGame.Models
             int a = Convert.ToInt16(Math.Round(TroopsAvailable * 0.5, MidpointRounding.AwayFromZero)); //give the half to the nearest 
             int b = Convert.ToInt16(Math.Round(TroopsAvailable * 0.25, MidpointRounding.AwayFromZero));//give 1/4 for the other two nearest
             int c = TroopsAvailable - a - b;
-                    //this maybe throw a end of index error
-            movements.Add(PriorityAlliesIDs[0].ToString() + "|" + a.ToString());
-            movements.Add(PriorityAlliesIDs[1].ToString() + "|" + b.ToString());
-            movements.Add(PriorityAlliesIDs[2].ToString() + "|" + c.ToString());
-            
+            //this maybe throw a end of index error
+            if (PriorityAlliesIDs.Count == 0)
+            {
+                if (AICountries.Count > 0)
+                    movements.Add(AICountries[0].ToString() + "|" + TroopsAvailable.ToString());
+            }
+            else
+            {
+                if (PriorityAlliesIDs.Count > 1)
+                    movements.Add(PriorityAlliesIDs[0].ToString() + "|" + a.ToString());
+                if (PriorityAlliesIDs.Count > 2)
+                    movements.Add(PriorityAlliesIDs[1].ToString() + "|" + b.ToString());
+                if (PriorityAlliesIDs.Count > 3)
+                    movements.Add(PriorityAlliesIDs[2].ToString() + "|" + c.ToString());
+            }
+
             return movements;
             #endregion
         }

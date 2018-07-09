@@ -34,7 +34,7 @@ namespace simplyRiskGame.Models
             Countries.Add(10, new Country("Argentina", 10, new List<int> { 11, 12 }));
             Countries.Add(11, new Country("Brasil", 11, new List<int> { 13, 12, 18, 10 }));
             Countries.Add(12, new Country("Perú", 12, new List<int> { 13, 11, 10 }));
-            Countries.Add(13, new Country("Venezuela ", 13, new List<int> { 4, 11, 12 }));
+            Countries.Add(13, new Country("Venezuela", 13, new List<int> { 3, 11, 12 }));
             //Africa
             Countries.Add(14, new Country("Congo", 14, new List<int> { 18, 15, 19 }));
             Countries.Add(15, new Country("África Oriental", 15, new List<int> { 33, 17, 19, 14, 18, 16 }));
