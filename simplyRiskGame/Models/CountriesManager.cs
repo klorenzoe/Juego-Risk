@@ -80,6 +80,15 @@ namespace simplyRiskGame.Models
         #endregion
 
         #region Stuff 
+        public int getIDbyName(string countryName)
+        {
+            for (int i = 1; i <= Countries.Count() ; i++)
+            {
+                if (Countries[i].CountryName == countryName)
+                    return Countries[i].CountryID;
+            }
+            return 0;
+        }
 
         public void UpdateCountriesList()
         {

@@ -49,16 +49,15 @@ namespace simplyRiskGame.Models
                 var prioritylst = priority.Keys.ToList(); // id, percentage
                 prioritylst.Sort();
 
-
                 foreach (var key in prioritylst)
                 {
                     if (TroopsAvailable != 0)
                     {
-                        temp = Convert.ToInt16(Math.Round(priority[key] * TroopsAvailable, MidpointRounding.AwayFromZero));
-                        movements.Add(key.ToString() + "|" + temp);
+                        temp = Convert.ToInt16(Math.Round(priority[key]/100 * TroopsAvailable, MidpointRounding.AwayFromZero));
+                       // movements.Add(key.ToString() + "|" + temp);
+                       movements.Add(getNearstFriendly(key).ToString() + "|" + temp);
                     }
                 }
-
                 return movements;
             }
             #endregion
@@ -67,19 +66,17 @@ namespace simplyRiskGame.Models
             List<int> PriorityAlliesIDs = getTopNear();
             int a = Convert.ToInt16(Math.Round(TroopsAvailable * 0.5, MidpointRounding.AwayFromZero)); //give the half to the nearest 
             int b = Convert.ToInt16(Math.Round(TroopsAvailable * 0.25, MidpointRounding.AwayFromZero));//give 1/4 for the other two nearest
-
-            //this maybe throw a end of index error
+            int c = TroopsAvailable - a - b;
+                    //this maybe throw a end of index error
             movements.Add(PriorityAlliesIDs[0].ToString() + "|" + a.ToString());
             movements.Add(PriorityAlliesIDs[1].ToString() + "|" + b.ToString());
-            movements.Add(PriorityAlliesIDs[2].ToString() + "|" + b.ToString());
-            if((TroopsAvailable - a -b- b) > 0)
-                movements.Add(PriorityAlliesIDs[3].ToString() + "|" + (TroopsAvailable - a - b - b).ToString());
-
+            movements.Add(PriorityAlliesIDs[2].ToString() + "|" + c.ToString());
+            
             return movements;
             #endregion
         }
         /// <summary>
-        /// returns from, how many troops and where  to move/atack separated by "|"
+        /// returns from, where and how many troops  to move/atack separated by "|"
         /// </summary>
         /// <param name="countries"></param>
         /// <returns></returns>
@@ -99,7 +96,7 @@ namespace simplyRiskGame.Models
             for (int i = 0; i < AICentre.Count(); i++)
             {
                 if (countries[AICentre[i]].TroopsCount != 0)//move troops to border
-                    movements.Add(AICentre[i] + "|" + countries[AICentre[i]].TroopsCount + "|" + GetNearestCountry(AICentre[i]));
+                    movements.Add(AICentre[i] + "|" + GetNearestCountry(AICentre[i]) + "|" + countries[AICentre[i]].TroopsCount);
             }
             List<int> AIBorder = getCentreBorderCountries(false); // move the troops from the border
             //List<int> VistitedNeighbors = new List<int>();
@@ -108,16 +105,17 @@ namespace simplyRiskGame.Models
             {
                 tempN = GetNearestCountry(AIBorder[i]);
                 if (countries[AIBorder[i]].TroopsCount > countries[tempN].TroopsCount)//move troops from the border if it a secure win
-                    movements.Add(AIBorder[i] + "|" + countries[AIBorder[i]].TroopsCount + "|" + tempN);
+                    movements.Add(AIBorder[i] + "|" + tempN + "|" + countries[AIBorder[i]].TroopsCount);
                 else
                 {
-                    movements.Add(AIBorder[i] + "|" + countries[AIBorder[i]].TroopsCount + "|" + getWeakestEnemy(AIBorder[i])); 
+                    movements.Add(AIBorder[i] + "|" +  getWeakestEnemy(AIBorder[i]) + "|" + countries[AIBorder[i]].TroopsCount); 
                 }
             }
             return movements;
             #endregion
         }
 
+        
         #region Important Stuff
 
         /// <summary>
@@ -231,6 +229,31 @@ namespace simplyRiskGame.Models
         #endregion
 
         #region Stuff
+        /// <summary>
+        /// get the nearst frindly country with the less troops
+        /// </summary>
+        /// <param name="countryID"></param>
+        /// <returns></returns>
+        public int getNearstFriendly(int countryID)
+        {
+            Country C = Countries[countryID];
+            int temp = 0;
+            int temp2 = 100;
+            int resultID = 0;
+            for (int i = 0; i < C.Neighborsint.Count(); i++)
+            {
+                if(Countries[C.Neighborsint[i]].Owner ==2)
+                {
+                    temp = Countries[C.Neighborsint[i]].TroopsCount;
+                    if (temp < temp2)
+                    {
+                        temp2 = temp;
+                        resultID = C.Neighborsint[i];
+                    }
+                }
+            }
+            return resultID;
+        }
 
         public bool haveEnemies(int countryID)
         {
@@ -309,7 +332,7 @@ namespace simplyRiskGame.Models
             CountriesGraph = new Graph<int, string>();
             SetCountriesGraph();
             var dijkstra = new Dijkstra<int, string>(CountriesGraph);
-            IShortestPathResult result = dijkstra.Process(Convert.ToUInt16(OriginCountry), Convert.ToUInt16(targetCountry)); //result contains the shortest path
+            IShortestPathResult result = dijkstra.Process(Convert.ToUInt16(OriginCountry-1), Convert.ToUInt16(targetCountry-1)); //result contains the shortest path
             return result.Distance;
         }
         /// <summary>

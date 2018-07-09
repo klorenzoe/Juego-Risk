@@ -401,19 +401,15 @@ namespace simplyRiskGame.Controllers
         [HttpPost]
         public ActionResult getMovementLogbook(string _data, bool player = false)
         {
-           
+
             string[] data = _data.Split('|');
             var country1 = 0;
             var country2 = 0;
             string troopsNumber = data[2];
             string values = "";
 
-<<<<<<< HEAD
-            for (int i = 1; i <= manager.Countries.Count; i++)
-=======
 
             if (player)
->>>>>>> 2cc33e7ee9262e20cd4607ae16ea3adf87b6fbec
             {
                 for (int i = 1; i <= manager.Countries.Count; i++)
                 {
@@ -433,10 +429,10 @@ namespace simplyRiskGame.Controllers
                 country1 = int.Parse(data[0]);
                 country2 = int.Parse(data[2]);
             }
-            
+
             // look if the countries are neighbors
             int[] troops = manager.getNeighborsTroopsCount(country1, manager.Countries[country1].Owner);
-            if(manager.Countries[country1].Owner == 1)
+            if (manager.Countries[country1].Owner == 1)
             {
                 rowNumbers[1]++;
             }
@@ -448,10 +444,10 @@ namespace simplyRiskGame.Controllers
             {
                 manager.Countries[country2].TroopsCount += int.Parse(data[2]);
                 values = "1";
-            }               
+            }
             // neutral or enemies
             else
-            {                
+            {
                 // condition if the country was conquered
                 if (manager.Countries[country2].TroopsCount < int.Parse(data[2]))
                 {
@@ -469,7 +465,7 @@ namespace simplyRiskGame.Controllers
             // values = one if the country was conquered + id deployer + deployer remaining troops + id receiver + receiver remaining troops + player
             values += "|" + country1 + "|" + manager.Countries[country1].TroopsCount + "|" + country2 + "|" +
                manager.Countries[country2].TroopsCount + "|" + manager.Countries[country1].Owner;
-            
+
 
             return Json(new { _values = values });
         }
@@ -484,8 +480,8 @@ namespace simplyRiskGame.Controllers
             int priority = int.Parse(temp[1]) * manager.TroopdforAssign(1) / 100;
             manager.Countries[Convert.ToInt16(temp[0])].TroopsCount = Convert.ToInt16(temp[1]);
 
-            rowNumbers[0]++; 
-            
+           
+
             return Json(new { something = true });
         }
 
@@ -512,6 +508,13 @@ namespace simplyRiskGame.Controllers
 
             return Json(new { troopsOptions = troops });
         }
+
+        [HttpPost]
+        public ActionResult getIdByName(string name)
+        {
+            int _id = manager.getIDbyName(name);
+            return Json(new { id = _id });
+        }  
 
         /// <summary>
         /// this method returns the troop number of each country
@@ -569,7 +572,7 @@ namespace simplyRiskGame.Controllers
         public ActionResult enemyMovements()
         {
             var assign_ = DTree.SetWhereAssignTroops(manager.Countries); //31|2
-
+            Update(assign_);
             var movements_ = DTree.SetWhereToMove(manager.Countries); //31|2|32
 
             var result = "";
@@ -581,9 +584,18 @@ namespace simplyRiskGame.Controllers
             return Json(new { assign = assign_, movements = result });
         }
 
+        private void Update(List<string> moves) {
+
+            for (int i = 0; i < moves.Count(); i++) {
+                string[] temp = moves[i].Split('|');
+                manager.Countries[int.Parse(temp[0])].TroopsCount += int.Parse(temp[1]); 
+            }
+
+        }
 
         public string getMovementLogbook_ (string _data, bool player = false)
-        {
+        { 
+            
 
             string[] data = _data.Split('|');
             var country1 = 0;
@@ -610,7 +622,8 @@ namespace simplyRiskGame.Controllers
             else
             {
                 country1 = int.Parse(data[0]);
-                country2 = int.Parse(data[2]);
+                manager.Countries[country1].TroopsCount -= int.Parse(data[2]);
+                country2 = int.Parse(data[1]);
             }
 
             // look if the countries are neighbors
