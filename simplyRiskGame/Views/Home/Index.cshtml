@@ -1442,6 +1442,15 @@
                     $("#country1 option").remove();
                    // $("#country2 option").remove();
                     $("#NumTroops option").remove();
+                    var link = '@Url.Action("getWinner", "Home")';
+                    $.ajax({
+                        url: link,
+                        type: "GET",
+                        data: {},
+                        success: function (data) {
+                            window.location = data.redirect;
+                        }
+                    });
 
 
                 }

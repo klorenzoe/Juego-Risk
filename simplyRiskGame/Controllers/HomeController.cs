@@ -669,6 +669,27 @@ namespace simplyRiskGame.Controllers
 
             return values;
         }
+
+        [HttpGet]
+
+        public ActionResult getWinner()
+        {
+
+            if (manager.getPlayerCountries(1).Count() == 0)
+            {
+                return Json(new { redirect = "https://photos.bandsintown.com/thumb/6285178.jpeg" }, JsonRequestBehavior.AllowGet);
+            }
+            else if (manager.getPlayerCountries(2).Count() == 0)
+            {
+                return Json(new { redirect = "https://ih1.redbubble.net/image.113831110.0284/flat,550x550,075,f.u4.jpg" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { hello = true });
+            }
+            return Json(new { hello = true });
+        }
+
         /*
           1) Colocar lineas de union entre paises (vista) o arreglar los paises??? fuck no se... pero uno se confunde
           2) Al iniciar no siempre cargan los paises
