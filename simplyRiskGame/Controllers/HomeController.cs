@@ -328,59 +328,71 @@ namespace simplyRiskGame.Controllers
             int countryNumberPlayer = 0;
             int countryNumberIA = 0;
             Random random = new Random();
+
             number = random.Next(3, 5);
 
             //ARRAY WITH THE INITIAL COUNTRIES FOR THE PLAYER
             int[] countriesPlayer = new int[number];
-
-            countryNumberPlayer = random.Next(1, 42);
-            countriesPlayer[0] = countryNumberPlayer;
-
-            for (int i = 1; i < number; i++)
-            {
-                int temp = 0;
-                temp = random.Next(1, 42);
-                if (nearbyCountry(countryNumberPlayer, temp) && !countriesPlayer.Contains(temp))
-                {
-                    countriesPlayer[i] = temp;
-                }
-                else
-                {
-                    i--;
-                }
-            }
-
-            //ARRAY WITH THE INITITAL COUNTRIES FOR THE IA
+            //IA
             int[] countriesIA = new int[number];
+            
+            countriesPlayer[0] = 0;
+            countriesIA[0] = 0;           
 
-            countriesIA[0] = countryNumberIA;
-            bool condition = true;
-            while (condition == true)
+            while (countriesPlayer.Contains(0) || countriesIA.Contains(0))
             {
-                if (!countriesPlayer.Contains(countryNumberIA))
+                countryNumberPlayer = random.Next(1, 42);
+                countriesPlayer[0] = countryNumberPlayer;
+
+                for (int i = 1; i < number; i++)
+                {
+                    int temp = 0;
+                    temp = random.Next(1, 42);
+                    if (nearbyCountry(countryNumberPlayer, temp) && !countriesPlayer.Contains(temp))
+                    {
+                        countriesPlayer[i] = temp;
+                    }
+                    else
+                    {
+                        countriesPlayer[i] = 0;
+                        i--;
+                    }
+                }
+
+                //ARRAY WITH THE INITITAL COUNTRIES FOR THE IA
+
+                countriesIA[0] = countryNumberIA;
+                bool condition = true;
+                while (condition == true)
                 {
                     countryNumberIA = random.Next(1, 42);
-                    countriesIA[0] = countryNumberIA;
-                    condition = false;
+                    if (!countriesPlayer.Contains(countryNumberIA))
+                    {
+                        countriesIA[0] = countryNumberIA;
+                        condition = false;
+                    }
+                    else
+                    {
+                        condition = true;
+                    }
                 }
-                else
+                for (int i = 1; i < number; i++)
                 {
-                    condition = true;
+                    int temp = 0;
+                    temp = random.Next(1, 42);
+                    if (nearbyCountry(countryNumberIA, temp) && !countriesPlayer.Contains(temp) && !countriesIA.Contains(temp))
+                    {
+
+                        countriesIA[i] = temp;
+                    }
+                    else
+                    {
+                        countriesIA[i] = 0;
+                        i--;
+                    }
                 }
             }
-            for (int i = 1; i < number; i++)
-            {
-                int temp = 0;
-                temp = random.Next(1, 42);
-                if (nearbyCountry(countryNumberIA, temp) && !countriesPlayer.Contains(temp) && !countriesIA.Contains(temp))
-                {
-                    countriesIA[i] = temp;
-                }
-                else
-                {
-                    i--;
-                }
-            }
+            
 
             foreach (var c in countriesIA)
 
