@@ -11,6 +11,8 @@ namespace simplyRiskGame.Models
     public class DecisionTree
     {
         public Dictionary<int, Country> Countries = new Dictionary<int, Country>();
+        private List<int> SouthAmerica = new List<int> (){ 10, 11, 12, 13};
+        private List<int> Ocenaia = new List<int>() { 39, 40, 41, 42 };
 
         /// <summary>
         /// returns where and how many troops assign separated by "|"
@@ -30,10 +32,10 @@ namespace simplyRiskGame.Models
             if (NearbyEnemies()) // If the AI have nearby enemies
             {
                 List<int> NearbyEnemiesIDs = new List<int>(); //Neighbor Enemies
-                List<int> NearbyEnemiesTroopsCount = new List<int>(); //Neighbor Enemies
+                List<double> NearbyEnemiesTroopsCount = new List<double>(); //Neighbor Enemies
                 List<int> NeighborsIDs = getPlayerNeighbors(2);
                 Dictionary<int, double> priority = new Dictionary<int, double>(); // percentage
-                int totalEnemyTroops = 0;
+                double totalEnemyTroops = 0;
                 for (int i = 0; i < NeighborsIDs.Count(); i++)
                     if (countries[NeighborsIDs[i]].Owner == 1)
                     {
@@ -42,24 +44,29 @@ namespace simplyRiskGame.Models
                         totalEnemyTroops += countries[NeighborsIDs[i]].TroopsCount;
                     }
 
-                for (int i = 0; i < NearbyEnemiesIDs.Count(); i++)
+                if (totalEnemyTroops != 0)
                 {
-                    priority.Add(NearbyEnemiesIDs[i], (NearbyEnemiesTroopsCount[i] / totalEnemyTroops) * 100); // ID, percentage
-                }
-                var prioritylst = priority.Keys.ToList(); // id, percentage
-                prioritylst.Sort();
-
-
-                foreach (var key in prioritylst)
-                {
-                    if (TroopsAvailable != 0)
+                    for (int i = 0; i < NearbyEnemiesIDs.Count(); i++)
                     {
-                        temp = Convert.ToInt16(Math.Round(priority[key] * TroopsAvailable, MidpointRounding.AwayFromZero));
-                        movements.Add(key.ToString() + "|" + temp);
+                        double temdsfsa = (Convert.ToDouble(NearbyEnemiesTroopsCount[i] / totalEnemyTroops) * 100);
+                        priority.Add(NearbyEnemiesIDs[i], (((NearbyEnemiesTroopsCount[i] / totalEnemyTroops) * 100))); // ID, percentage
                     }
-                }
+                    var prioritylst = priority.Keys.ToList(); // id, percentage
+                    prioritylst.Sort();
 
-                return movements;
+                    foreach (var key in prioritylst)
+                    {
+                        temp = Convert.ToInt16(Math.Round(priority[key] / 100 * TroopsAvailable, MidpointRounding.AwayFromZero));
+                        // movements.Add(key.ToString() + "|" + temp);
+                        movements.Add(getNearstFriendly(key).ToString() + "|" + temp);
+                    }
+                    return movements;
+                }
+                else if(NearbyEnemiesIDs.Count() == 1)
+                {
+                    movements.Add(getNearstFriendly(NearbyEnemiesIDs[0]).ToString() + "|" + TroopsAvailable);
+                    return movements;
+                }
             }
             #endregion
 
@@ -67,16 +74,28 @@ namespace simplyRiskGame.Models
             List<int> PriorityAlliesIDs = getTopNear();
             int a = Convert.ToInt16(Math.Round(TroopsAvailable * 0.5, MidpointRounding.AwayFromZero)); //give the half to the nearest 
             int b = Convert.ToInt16(Math.Round(TroopsAvailable * 0.25, MidpointRounding.AwayFromZero));//give 1/4 for the other two nearest
-
-            movements.Add(PriorityAlliesIDs[0].ToString() + "|" + a.ToString());
-            movements.Add(PriorityAlliesIDs[1].ToString() + "|" + b.ToString());
-            movements.Add(PriorityAlliesIDs[2].ToString() + "|" + b.ToString());
+            int c = TroopsAvailable - a - b;
+            //this maybe throw a end of index error
+            if (PriorityAlliesIDs.Count == 0)
+            {
+                if (AICountries.Count > 0)
+                    movements.Add(AICountries[0].ToString() + "|" + TroopsAvailable.ToString());
+            }
+            else
+            {
+                if (PriorityAlliesIDs.Count > 1)
+                    movements.Add(PriorityAlliesIDs[0].ToString() + "|" + a.ToString());
+                if (PriorityAlliesIDs.Count > 2)
+                    movements.Add(PriorityAlliesIDs[1].ToString() + "|" + b.ToString());
+                if (PriorityAlliesIDs.Count > 3)
+                    movements.Add(PriorityAlliesIDs[2].ToString() + "|" + c.ToString());
+            }
 
             return movements;
             #endregion
         }
         /// <summary>
-        /// returns from, how many troops and where  to move/atack separated by "|"
+        /// returns from, where and how many troops  to move/atack separated by "|"
         /// </summary>
         /// <param name="countries"></param>
         /// <returns></returns>
@@ -84,6 +103,7 @@ namespace simplyRiskGame.Models
         {
             Countries = countries;
             List<string> movements = new List<string>();
+            List<int> AICountries = getPlayerCountries(2); //countries ids 
             #region War phase
             //if (NearbyEnemies())
             //{
@@ -92,11 +112,16 @@ namespace simplyRiskGame.Models
             //}
             #endregion
             #region Peace times
+            //if(AICountries.Any(x => SouthAmerica.Contains(x)))
+            //    return CornerPhase(true);
+            //else if(AICountries.Any(x => Ocenaia.Contains(x)))
+            //    return CornerPhase(false);
+
             List<int> AICentre = getCentreBorderCountries(true); //move the troops from the inside
             for (int i = 0; i < AICentre.Count(); i++)
             {
                 if (countries[AICentre[i]].TroopsCount != 0)//move troops to border
-                    movements.Add(AICentre[i] + "|" + countries[AICentre[i]].TroopsCount + "|" + GetNearestCountry(AICentre[i]));
+                    movements.Add(AICentre[i] + "|" + GetNearestCountry(AICentre[i]) + "|" + countries[AICentre[i]].TroopsCount);
             }
             List<int> AIBorder = getCentreBorderCountries(false); // move the troops from the border
             //List<int> VistitedNeighbors = new List<int>();
@@ -104,19 +129,37 @@ namespace simplyRiskGame.Models
             for (int i = 0; i < AIBorder.Count(); i++)
             {
                 tempN = GetNearestCountry(AIBorder[i]);
+                if (tempN == 0)      //If the AI Win!
+                    return movements;
+
                 if (countries[AIBorder[i]].TroopsCount > countries[tempN].TroopsCount)//move troops from the border if it a secure win
-                    movements.Add(AIBorder[i] + "|" + countries[AIBorder[i]].TroopsCount + "|" + tempN);
+                    movements.Add(AIBorder[i] + "|" + tempN + "|" + countries[AIBorder[i]].TroopsCount);
                 else
                 {
-                    movements.Add(AIBorder[i] + "|" + countries[AIBorder[i]].TroopsCount + "|" + getWeakestEnemy(AIBorder[i])); 
+                    movements.Add(AIBorder[i] + "|" +  getWeakestEnemy(AIBorder[i]) + "|" + countries[AIBorder[i]].TroopsCount); 
                 }
             }
             return movements;
             #endregion
         }
+        /// <summary>
+        /// if true South Africa Case
+        /// if false Oceania Case
+        /// </summary>
+        /// <param name="flag"></param>
+        /// <returns></returns>
+        public List<string> CornerPhase(bool flag)
+        {
+            List<string> movements = new List<string>();
+            if(flag) //South Africa
+            {
 
-
-
+                return movements;
+            }
+            //Ocennia
+            return movements;
+        }
+ 
         #region Important Stuff
 
         /// <summary>
@@ -153,7 +196,7 @@ namespace simplyRiskGame.Models
         public int GetNearestCountry(int countryID)
         {
             int dist = 100;
-            int result = 0;
+            int result = 0; //default
             int temp = 0;
             for (int i = 0; i < Countries[countryID].Neighborsint.Count(); i++)
             {
@@ -230,6 +273,31 @@ namespace simplyRiskGame.Models
         #endregion
 
         #region Stuff
+        /// <summary>
+        /// get the nearst frindly country with the less troops
+        /// </summary>
+        /// <param name="countryID"></param>
+        /// <returns></returns>
+        public int getNearstFriendly(int countryID)
+        {
+            Country C = Countries[countryID];
+            int temp = 0;
+            int temp2 = 100;
+            int resultID = 0;
+            for (int i = 0; i < C.Neighborsint.Count(); i++)
+            {
+                if(Countries[C.Neighborsint[i]].Owner ==2)
+                {
+                    temp = Countries[C.Neighborsint[i]].TroopsCount;
+                    if (temp < temp2)
+                    {
+                        temp2 = temp;
+                        resultID = C.Neighborsint[i];
+                    }
+                }
+            }
+            return resultID;
+        }
 
         public bool haveEnemies(int countryID)
         {
@@ -308,7 +376,7 @@ namespace simplyRiskGame.Models
             CountriesGraph = new Graph<int, string>();
             SetCountriesGraph();
             var dijkstra = new Dijkstra<int, string>(CountriesGraph);
-            IShortestPathResult result = dijkstra.Process(Convert.ToUInt16(OriginCountry), Convert.ToUInt16(targetCountry)); //result contains the shortest path
+            IShortestPathResult result = dijkstra.Process(Convert.ToUInt16(OriginCountry-1), Convert.ToUInt16(targetCountry-1)); //result contains the shortest path
             return result.Distance;
         }
         /// <summary>
@@ -321,12 +389,14 @@ namespace simplyRiskGame.Models
             int temp = 100;
             List<int> temporallsy = getPlayerCountries(1);
             List<int> result = new List<int>();
-
-            for (int i = 0; i < temporallsy.Count(); i++)
+            if (temporallsy.Count != 0)
             {
-                result.Add(CalulateDistanceDijkstra(countryID, temporallsy[i]));
+                for (int i = 0; i < temporallsy.Count(); i++)
+                {
+                    result.Add(CalulateDistanceDijkstra(countryID, temporallsy[i]));
+                }
+                temp = result.Min();
             }
-            temp = result.Min();
             return temp;
         }
         #endregion
