@@ -129,6 +129,9 @@ namespace simplyRiskGame.Models
             for (int i = 0; i < AIBorder.Count(); i++)
             {
                 tempN = GetNearestCountry(AIBorder[i]);
+                if (tempN == 0)      //If the AI Win!
+                    return movements;
+
                 if (countries[AIBorder[i]].TroopsCount > countries[tempN].TroopsCount)//move troops from the border if it a secure win
                     movements.Add(AIBorder[i] + "|" + tempN + "|" + countries[AIBorder[i]].TroopsCount);
                 else
@@ -148,8 +151,12 @@ namespace simplyRiskGame.Models
         public List<string> CornerPhase(bool flag)
         {
             List<string> movements = new List<string>();
+            if(flag) //South Africa
+            {
 
-
+                return movements;
+            }
+            //Ocennia
             return movements;
         }
  
@@ -189,7 +196,7 @@ namespace simplyRiskGame.Models
         public int GetNearestCountry(int countryID)
         {
             int dist = 100;
-            int result = 0;
+            int result = 0; //default
             int temp = 0;
             for (int i = 0; i < Countries[countryID].Neighborsint.Count(); i++)
             {
