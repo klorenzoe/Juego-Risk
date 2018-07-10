@@ -10,13 +10,14 @@ namespace simplyRiskGame.Controllers
     public class HomeController : Controller
     {
         public static CountriesManager manager = new CountriesManager();
+        DecisionTree DTree = new DecisionTree();
 
         public int[] rowNumbers = new int[3];
-        public string path = "D:/GitHub/SECOND/Juego-Risk/dataSet.xlsx"; 
+        public string path = "D:/GitHub/SECOND/Juego-Risk/dataSet.xlsx";
         public static List<int> initialiceCountries = new List<int>();
 
         public HomeController() {
-            
+
         }
         public ActionResult Index()
         {
@@ -24,6 +25,7 @@ namespace simplyRiskGame.Controllers
             initialiceCountries = new List<int>();
             ViewBag.myTroopLimit = manager.TroopdforAssign(1);
             ViewBag.IATroopLimit = manager.TroopdforAssign(2);
+
             return View();
         }
 
@@ -350,7 +352,7 @@ namespace simplyRiskGame.Controllers
 
             //ARRAY WITH THE INITITAL COUNTRIES FOR THE IA
             int[] countriesIA = new int[number];
-            
+
             countriesIA[0] = countryNumberIA;
             bool condition = true;
             while (condition == true)
@@ -397,28 +399,37 @@ namespace simplyRiskGame.Controllers
         }
 
         [HttpPost]
-        public ActionResult getMovementLogbook(string _data)
+        public ActionResult getMovementLogbook(string _data, bool player = false)
         {
+           
             string[] data = _data.Split('|');
             var country1 = 0;
             var country2 = 0;
             string troopsNumber = data[2];
             string values = "";
 
-            
 
-            for (int i = 1; i <= manager.Countries.Count; i++)
+            if (player)
             {
-                //get deployer's country id
-                if(manager.Countries[i].CountryName == data[0])
+                for (int i = 1; i <= manager.Countries.Count; i++)
                 {
-                    manager.Countries[i].TroopsCount -= int.Parse(data[2]);
-                    country1 = manager.Countries[i].CountryID; 
+                    //get deployer's country id
+                    if (manager.Countries[i].CountryName == data[0])
+                    {
+                        manager.Countries[i].TroopsCount -= int.Parse(data[2]);
+                        country1 = manager.Countries[i].CountryID;
+                    }
+                    //get receiver's country id
+                    if (manager.Countries[i].CountryName == data[1])
+                        country2 = manager.Countries[i].CountryID;
                 }
-                //get receiver's country id
-                if(manager.Countries[i].CountryName == data[1])
-                    country2 = manager.Countries[i].CountryID;        
             }
+            else
+            {
+                country1 = int.Parse(data[0]);
+                country2 = int.Parse(data[2]);
+            }
+            
             // look if the countries are neighbors
             int[] troops = manager.getNeighborsTroopsCount(country1, manager.Countries[country1].Owner);
             if(manager.Countries[country1].Owner == 1)
@@ -500,8 +511,10 @@ namespace simplyRiskGame.Controllers
             return Json(new { troopsOptions = troops });
         }
 
-
-
+        /// <summary>
+        /// this method returns the troop number of each country
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult countryTroops()
         {
@@ -514,7 +527,6 @@ namespace simplyRiskGame.Controllers
                 TroopsCount[i] = troops;
                 manager.Countries[i + 1].TroopsCount = troops;
             }
-            
             return Json(new { initialTroops = TroopsCount });
         }
 
@@ -547,7 +559,99 @@ namespace simplyRiskGame.Controllers
             return Json(new { succes = true });
         }
 
+        /// <summary>
+        /// this method returns the movements of country
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult enemyMovements()
+        {
+            var assign_ = DTree.SetWhereAssignTroops(manager.Countries); //31|2
 
+            var movements_ = DTree.SetWhereToMove(manager.Countries); //31|2|32
+
+            var result = "";
+            foreach (var m in movements_) {
+                result += getMovementLogbook_(m)+"*";
+            }
+
+
+            return Json(new { assign = assign_, movements = result });
+        }
+
+
+        public string getMovementLogbook_ (string _data, bool player = false)
+        {
+
+            string[] data = _data.Split('|');
+            var country1 = 0;
+            var country2 = 0;
+            string troopsNumber = data[2];
+            string values = "";
+
+
+            if (player)
+            {
+                for (int i = 1; i <= manager.Countries.Count; i++)
+                {
+                    //get deployer's country id
+                    if (manager.Countries[i].CountryName == data[0])
+                    {
+                        manager.Countries[i].TroopsCount -= int.Parse(data[2]);
+                        country1 = manager.Countries[i].CountryID;
+                    }
+                    //get receiver's country id
+                    if (manager.Countries[i].CountryName == data[1])
+                        country2 = manager.Countries[i].CountryID;
+                }
+            }
+            else
+            {
+                country1 = int.Parse(data[0]);
+                country2 = int.Parse(data[2]);
+            }
+
+            // look if the countries are neighbors
+            int[] troops = manager.getNeighborsTroopsCount(country1, manager.Countries[country1].Owner);
+            if (manager.Countries[country1].Owner == 1)
+            {
+
+                rowNumbers[1]++;
+            }
+            else
+            {
+
+                rowNumbers[2]++;
+            }
+            if (manager.getNeighborsAlly(country1, manager.Countries[country1].Owner).Contains(country2))
+            {
+                manager.Countries[country2].TroopsCount += int.Parse(data[2]);
+                values = "1";
+            }
+            // neutral or enemies
+            else
+            {
+                // condition if the country was conquered
+                if (manager.Countries[country2].TroopsCount < int.Parse(data[2]))
+                {
+                    manager.Countries[country2].Owner = manager.Countries[country1].Owner;
+                    values = "1";
+                }
+                // still neutral or enemy 
+                else
+                    values = "0";
+
+                manager.Countries[country2].TroopsCount = Math.Abs(int.Parse(data[2]) - manager.Countries[country2].TroopsCount);
+                //manager.Countries[country2].TroopsCount = Math.Abs(manager.Countries[country2].TroopsCount - int.Parse(data[2]));
+
+            }
+            // values = one if the country was conquered + id deployer + deployer remaining troops + id receiver + receiver remaining troops + player
+            values += "|" + country1 + "|" + manager.Countries[country1].TroopsCount + "|" + country2 + "|" +
+               manager.Countries[country2].TroopsCount + "|" + manager.Countries[country1].Owner;
+
+
+            return values;
+        }
         /*
           1) Colocar lineas de union entre paises (vista)
           2) Cambiar el turno de la IA para que reciba comandos
