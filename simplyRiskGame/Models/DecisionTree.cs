@@ -71,6 +71,7 @@ namespace simplyRiskGame.Models
             #endregion
 
             #region If the AI dont have nearby enemies
+
             List<int> PriorityAlliesIDs = getTopNear();
             int a = Convert.ToInt16(Math.Round(TroopsAvailable * 0.5, MidpointRounding.AwayFromZero)); //give the half to the nearest 
             int b = Convert.ToInt16(Math.Round(TroopsAvailable * 0.25, MidpointRounding.AwayFromZero));//give 1/4 for the other two nearest
@@ -85,6 +86,14 @@ namespace simplyRiskGame.Models
             {
                 if (PriorityAlliesIDs.Count > 1)
                     movements.Add(PriorityAlliesIDs[0].ToString() + "|" + a.ToString());
+                //AI have one in Ocenaia              and dont have enemies and      dont have Siam      and     East Aust 
+                if (AICountries.Any(x => Ocenaia.Contains(x)) && !NearbyEnemies() && !(AICountries.Contains(35) && AICountries.Contains(39)))
+                {
+                    movements = CornerPhaseAssignTroops(false, AICountries, b + c);
+                    movements.Add(PriorityAlliesIDs[0].ToString() + "|" + a.ToString());
+                    return movements;
+                }
+
                 if (PriorityAlliesIDs.Count > 2)
                     movements.Add(PriorityAlliesIDs[1].ToString() + "|" + b.ToString());
                 if (PriorityAlliesIDs.Count > 3)
@@ -104,18 +113,12 @@ namespace simplyRiskGame.Models
             Countries = countries;
             List<string> movements = new List<string>();
             List<int> AICountries = getPlayerCountries(2); //countries ids 
-            #region War phase
-            //if (NearbyEnemies())
-            //{
 
-            //    return movements;
-            //}
-            #endregion
-            #region Peace times
-            //if(AICountries.Any(x => SouthAmerica.Contains(x)))
-            //    return CornerPhase(true);
-            //else if(AICountries.Any(x => Ocenaia.Contains(x)))
-            //    return CornerPhase(false);
+                        //AI have one in Ocenaia              and dont have enemies and      dont have Siam      and     East Aust 
+            if (AICountries.Any(x => Ocenaia.Contains(x)) && !NearbyEnemies() && !(AICountries.Contains(35) && AICountries.Contains(39))) // Only for Peace times
+                return CornerPhase(false, AICountries);
+            //else if (AICountries.Any(x => SouthAmerica.Contains(x)) && !NearbyEnemies())             // Only for Peace times
+            //    return CornerPhase(true, AICountries);
 
             List<int> AICentre = getCentreBorderCountries(true); //move the troops from the inside
             for (int i = 0; i < AICentre.Count(); i++)
@@ -123,8 +126,8 @@ namespace simplyRiskGame.Models
                 if (countries[AICentre[i]].TroopsCount != 0)//move troops to border
                     movements.Add(AICentre[i] + "|" + GetNearestCountry(AICentre[i]) + "|" + countries[AICentre[i]].TroopsCount);
             }
+
             List<int> AIBorder = getCentreBorderCountries(false); // move the troops from the border
-            //List<int> VistitedNeighbors = new List<int>();
             int tempN = 0;
             for (int i = 0; i < AIBorder.Count(); i++)
             {
@@ -140,7 +143,6 @@ namespace simplyRiskGame.Models
                 }
             }
             return movements;
-            #endregion
         }
         /// <summary>
         /// if true South Africa Case
@@ -148,19 +150,89 @@ namespace simplyRiskGame.Models
         /// </summary>
         /// <param name="flag"></param>
         /// <returns></returns>
-        public List<string> CornerPhase(bool flag)
+        public List<string> CornerPhase(bool flag, List<int> AICountries)
         {
             List<string> movements = new List<string>();
-            if(flag) //South Africa
+            List<int> MissingCountries = new List<int>();
+            if (flag) //South Africa
             {
 
                 return movements;
             }
-            //Ocennia
+            #region Ocennia
+            //dont have Siam 35 and East Aust 39 
+            if (!AICountries.Contains(35))
+                MissingCountries.Add(35);
+            for (int i = 39; i <= 42; i++) // Add missing countries of the continent
+                if (!AICountries.Contains(i))
+                    MissingCountries.Add(i);
+            // from, where, how many troops
+            for (int i = 0; i < AICountries.Count(); i++)
+                if (Countries[AICountries[i]].Neighborsint.Any(x => MissingCountries.Contains(x)))
+                    movements.Add(AICountries[i].ToString() + "|" + getEemyIDforOceania(AICountries[i], MissingCountries) + "|" + Countries[AICountries[i]].TroopsCount);
+            
             return movements;
+            #endregion
         }
- 
+
+        /// <summary>
+        /// if true South Africa Case
+        /// if false Oceania Case
+        /// </summary>
+        /// <param name="flag"></param>
+        /// <param name="AICountries"></param>
+        /// <returns></returns>
+        public List<string> CornerPhaseAssignTroops(bool flag, List<int> AICountries, int Troops)
+        {
+            List<int> MissingCountries = new List<int>();
+            List<string> movements = new List<string>();
+            int a = Convert.ToInt16(Math.Round(Troops * 0.5, MidpointRounding.AwayFromZero));
+            int b = Troops - a;
+            bool fCount = true;
+            if (flag) //South Africa
+            {
+
+                return movements;
+            }
+            #region Ocenania
+            //dont have Siam 35 and East Aust 39 
+            if (!AICountries.Contains(35))
+                MissingCountries.Add(35);
+            for (int i = 39; i <= 42; i++) // Add missing countries of the continent
+                if (!AICountries.Contains(i))
+                    MissingCountries.Add(i);
+            for (int i = 0; i < AICountries.Count(); i++)
+            {
+                if (Countries[AICountries[i]].Neighborsint.Any(x => MissingCountries.Contains(x)))
+                {
+                    if (fCount)
+                    {
+                        movements.Add(AICountries[i].ToString() + "|" + a.ToString());
+                        fCount = false;
+                    }
+                    else 
+                    {
+                        movements.Add(AICountries[i].ToString() + "|" + b.ToString());
+                        return movements;
+                    }
+                }
+            }
+            return movements;
+            #endregion
+        }
+
+
         #region Important Stuff
+
+        public int getEemyIDforOceania(int CountryID, List<int> MissingCountries)
+        {
+            for (int i = 0; i < MissingCountries.Count(); i++)
+            {
+                if (Countries[CountryID].Neighborsint.Contains(MissingCountries[i]))
+                    return MissingCountries[i];
+            }
+            return 40;
+        }
 
         /// <summary>
         /// get the neighbor with less troops
