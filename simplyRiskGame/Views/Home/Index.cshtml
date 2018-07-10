@@ -1379,7 +1379,7 @@
             $("#country2 option").remove();
             $("#NumTroops option").remove();
             //getId($("#country1").text());
-            
+
         });
 
         $('#commit').click(function(event) {
@@ -1400,7 +1400,7 @@
                         var countryQuantity = u.split('|');
                         assignTroopsEnemy(countryQuantity[0], countryQuantity[1]);
                     });
-                    
+
                     //movements
                     debugger;
                     commitMovements+=data.movements;
@@ -1413,7 +1413,7 @@
                     commitMovements="";
                     debugger;
                     movementsArray.forEach(function(m){
-                        debugger;
+
                         var features = m.split('|');
                         // values = one if the country was conquered(0) + id deployer(1) + deployer remaining troops(2) + id receiver(3) + receiver remaining troops(4) + player(5)
                         if(!(movementsArray[0] == "")){
@@ -1425,13 +1425,14 @@
                             }
                         }
                     });
+                    debugger;
                     $.ajax({
                         url: "/Home/assignTroops",
                         type: "POST",
                         data: {},
                         success: function (data) {
                             debugger;
-                            troopLimit = @ViewBag.myTroopLimit;
+                            troopLimit = data.Troops;
                             player = 1;
                             $("#troopsToDeploy").val(troopLimit);
                             isAssignment = true;
@@ -1441,12 +1442,14 @@
                     $("#country1 option").remove();
                    // $("#country2 option").remove();
                     $("#NumTroops option").remove();
+
+
                 }
             });
         });
 
-       
-        
+
+
 
 
         //Remaining troops to deploy
@@ -2898,10 +2901,10 @@
         var oldQuantity = $(equivalences[country].text).text();
         var newQuantity = Number(oldQuantity) + Number(quantity);
         $(equivalences[country].text).text(newQuantity);
-    
+
     }
 
-     //get id from a country by the name 
+     //get id from a country by the name
     function getId(countryName) {
         debugger;
         $.ajax({

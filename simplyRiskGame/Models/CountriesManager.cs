@@ -12,8 +12,6 @@ namespace simplyRiskGame.Models
     {
         public Dictionary<int, Country> Countries = new Dictionary<int, Country>();
         public Graph<int, string> CountriesGraph = new Graph<int, string>();
-        public DecisionTree Decisions = new DecisionTree();
-
 
         public CountriesManager()
         {
@@ -72,12 +70,6 @@ namespace simplyRiskGame.Models
             UpdateCountriesList();
            // SetCountriesGraph();
         }
-
-        #region Tree
-
-
-
-        #endregion
 
         #region Stuff 
         public int getIDbyName(string countryName)
@@ -207,7 +199,6 @@ namespace simplyRiskGame.Models
             return t;
         }
 #endregion
-
 
         #region Dijkstra
         public void SetCountriesGraph()

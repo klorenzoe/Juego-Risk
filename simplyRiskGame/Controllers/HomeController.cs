@@ -321,6 +321,10 @@ namespace simplyRiskGame.Controllers
             return Json(new { isNear = nearbyCountry(actualCountry, nearCountry) });
         }
 
+       
+
+
+
         [HttpPost]
         public ActionResult initialCountries()
         {
@@ -559,9 +563,10 @@ namespace simplyRiskGame.Controllers
         [HttpPost]
         public ActionResult assignTroops()
         {
-            ViewBag.myTroopLimit = manager.TroopdforAssign(1);
+            //ViewBag.myTroopLimit = manager.TroopdforAssign(1);
             ViewBag.IATroopLimit = manager.TroopdforAssign(2);
-            return Json(new { succes = true });
+            var troops = manager.TroopdforAssign(1);
+            return Json(new { Troops = troops });
         }
 
         /// <summary>
@@ -594,15 +599,12 @@ namespace simplyRiskGame.Controllers
         }
 
         public string getMovementLogbook_ (string _data, bool player = false)
-        { 
-            
-
+        {
             string[] data = _data.Split('|');
             var country1 = 0;
             var country2 = 0;
             string troopsNumber = data[2];
             string values = "";
-
 
             if (player)
             {
@@ -668,12 +670,9 @@ namespace simplyRiskGame.Controllers
             return values;
         }
         /*
-          1) Colocar lineas de union entre paises (vista)
+          1) Colocar lineas de union entre paises (vista) o arreglar los paises??? fuck no se... pero uno se confunde
           2) Al iniciar no siempre cargan los paises
-          3) La AI es lv 1 
-          4) Indicar Fin de juego (ganador y perdedor)
-          5) Arreglar contador de tropas (vista)
-
+          3) Indicar Fin de juego (ganador y perdedor)
          */
     }
 }
