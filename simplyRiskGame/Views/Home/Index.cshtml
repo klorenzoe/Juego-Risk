@@ -1407,6 +1407,8 @@
             $("#country1 option").remove();
             $("#country2 option").remove();
             $("#NumTroops option").remove();
+            //getId($("#country1").text());
+
         });
 
         $('#commit').click(function(event) {
@@ -1427,7 +1429,7 @@
                         var countryQuantity = u.split('|');
                         assignTroopsEnemy(countryQuantity[0], countryQuantity[1]);
                     });
-                    
+
                     //movements
                     debugger;
                     commitMovements+=data.movements;
@@ -1440,7 +1442,7 @@
                     commitMovements="";
                     debugger;
                     movementsArray.forEach(function(m){
-                        debugger;
+
                         var features = m.split('|');
                         // values = one if the country was conquered(0) + id deployer(1) + deployer remaining troops(2) + id receiver(3) + receiver remaining troops(4) + player(5)
                         if(!(movementsArray[0] == "")){
@@ -1452,13 +1454,14 @@
                             }
                         }
                     });
+                    debugger;
                     $.ajax({
                         url: "/Home/assignTroops",
                         type: "POST",
                         data: {},
                         success: function (data) {
                             debugger;
-                            troopLimit = @ViewBag.myTroopLimit;
+                            troopLimit = data.Troops;
                             player = 1;
                             $("#troopsToDeploy").val(troopLimit);
                             isAssignment = true;
@@ -1466,11 +1469,25 @@
                     });
                     $("#movementMenu").hide();
                     $("#country1 option").remove();
-                    $("#country2 option").remove();
+                   // $("#country2 option").remove();
                     $("#NumTroops option").remove();
+                    var link = '@Url.Action("getWinner", "Home")';
+                    $.ajax({
+                        url: link,
+                        type: "GET",
+                        data: {},
+                        success: function (data) {
+                            window.location = data.redirect;
+                        }
+                    });
+
+
                 }
             });
         });
+
+
+
 
 
         //Remaining troops to deploy
@@ -1495,9 +1512,15 @@
                 }
 
             });
+
             $("#country1 option:selected").remove();
-            $("#country2 option:selected").remove();
+            //$("#country2 option:selected").remove();
+            nearbyCountries($("#country1 option:selected").text());
             $("#NumTroops option:selected").remove();
+            getId($("#country1 option:selected").text());
+            if ($("#country1 option").length == 0) {
+                $("#movementMenu").hide();
+            }
         })
 
 
@@ -2880,7 +2903,8 @@
             });
         }
 
-        function getTroopsCount(Availabletroops){
+        function getTroopsCount(Availabletroops) {
+            debugger;
             $.ajax({
                 url: "/Home/troopsAssign",
                 type: "POST",
@@ -2915,7 +2939,22 @@
         var oldQuantity = $(equivalences[country].text).text();
         var newQuantity = Number(oldQuantity) + Number(quantity);
         $(equivalences[country].text).text(newQuantity);
-    
+
+    }
+
+     //get id from a country by the name
+    function getId(countryName) {
+        debugger;
+        $.ajax({
+            url: "/Home/getIdByName",
+            type: "POST",
+            data: { name: countryName },
+            success: function (data) {
+
+                getTroopsCount($(equivalences[data.id].text).text());
+                return true;
+            }
+        });
     }
 
     function EnemyMovements(enemyMovement){
