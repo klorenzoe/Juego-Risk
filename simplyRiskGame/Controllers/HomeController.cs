@@ -355,7 +355,7 @@ namespace simplyRiskGame.Controllers
 
             countriesIA[0] = countryNumberIA;
             bool condition = true;
-            while (condition == true)
+            while (condition)
             {
                 if (!countriesPlayer.Contains(countryNumberIA))
                 {
@@ -669,9 +669,10 @@ namespace simplyRiskGame.Controllers
         }
         /*
           1) Colocar lineas de union entre paises (vista)
-          2) Cambiar el turno de la IA para que reciba comandos
-          3) 
-          4)
+          2) Al iniciar no siempre cargan los paises
+          3) La AI es lv 1 
+          4) Indicar Fin de juego (ganador y perdedor)
+          5) Arreglar contador de tropas (vista)
 
          */
     }

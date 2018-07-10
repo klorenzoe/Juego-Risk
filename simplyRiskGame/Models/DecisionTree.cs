@@ -11,6 +11,8 @@ namespace simplyRiskGame.Models
     public class DecisionTree
     {
         public Dictionary<int, Country> Countries = new Dictionary<int, Country>();
+        private List<int> SouthAmerica = new List<int> (){ 10, 11, 12, 13};
+        private List<int> Ocenaia = new List<int>() { 39, 40, 41, 42 };
 
         /// <summary>
         /// returns where and how many troops assign separated by "|"
@@ -30,10 +32,10 @@ namespace simplyRiskGame.Models
             if (NearbyEnemies()) // If the AI have nearby enemies
             {
                 List<int> NearbyEnemiesIDs = new List<int>(); //Neighbor Enemies
-                List<int> NearbyEnemiesTroopsCount = new List<int>(); //Neighbor Enemies
+                List<double> NearbyEnemiesTroopsCount = new List<double>(); //Neighbor Enemies
                 List<int> NeighborsIDs = getPlayerNeighbors(2);
                 Dictionary<int, double> priority = new Dictionary<int, double>(); // percentage
-                int totalEnemyTroops = 0;
+                double totalEnemyTroops = 0;
                 for (int i = 0; i < NeighborsIDs.Count(); i++)
                     if (countries[NeighborsIDs[i]].Owner == 1)
                     {
@@ -46,7 +48,8 @@ namespace simplyRiskGame.Models
                 {
                     for (int i = 0; i < NearbyEnemiesIDs.Count(); i++)
                     {
-                        priority.Add(NearbyEnemiesIDs[i], (NearbyEnemiesTroopsCount[i] / totalEnemyTroops) * 100); // ID, percentage
+                        double temdsfsa = (Convert.ToDouble(NearbyEnemiesTroopsCount[i] / totalEnemyTroops) * 100);
+                        priority.Add(NearbyEnemiesIDs[i], (((NearbyEnemiesTroopsCount[i] / totalEnemyTroops) * 100))); // ID, percentage
                     }
                     var prioritylst = priority.Keys.ToList(); // id, percentage
                     prioritylst.Sort();
@@ -64,7 +67,6 @@ namespace simplyRiskGame.Models
                     movements.Add(getNearstFriendly(NearbyEnemiesIDs[0]).ToString() + "|" + TroopsAvailable);
                     return movements;
                 }
-                return movements;
             }
             #endregion
 
@@ -101,6 +103,7 @@ namespace simplyRiskGame.Models
         {
             Countries = countries;
             List<string> movements = new List<string>();
+            List<int> AICountries = getPlayerCountries(2); //countries ids 
             #region War phase
             //if (NearbyEnemies())
             //{
@@ -109,6 +112,11 @@ namespace simplyRiskGame.Models
             //}
             #endregion
             #region Peace times
+            //if(AICountries.Any(x => SouthAmerica.Contains(x)))
+            //    return CornerPhase(true);
+            //else if(AICountries.Any(x => Ocenaia.Contains(x)))
+            //    return CornerPhase(false);
+
             List<int> AICentre = getCentreBorderCountries(true); //move the troops from the inside
             for (int i = 0; i < AICentre.Count(); i++)
             {
@@ -131,8 +139,20 @@ namespace simplyRiskGame.Models
             return movements;
             #endregion
         }
+        /// <summary>
+        /// if true South Africa Case
+        /// if false Oceania Case
+        /// </summary>
+        /// <param name="flag"></param>
+        /// <returns></returns>
+        public List<string> CornerPhase(bool flag)
+        {
+            List<string> movements = new List<string>();
 
-        
+
+            return movements;
+        }
+ 
         #region Important Stuff
 
         /// <summary>
@@ -362,12 +382,14 @@ namespace simplyRiskGame.Models
             int temp = 100;
             List<int> temporallsy = getPlayerCountries(1);
             List<int> result = new List<int>();
-
-            for (int i = 0; i < temporallsy.Count(); i++)
+            if (temporallsy.Count != 0)
             {
-                result.Add(CalulateDistanceDijkstra(countryID, temporallsy[i]));
+                for (int i = 0; i < temporallsy.Count(); i++)
+                {
+                    result.Add(CalulateDistanceDijkstra(countryID, temporallsy[i]));
+                }
+                temp = result.Min();
             }
-            temp = result.Min();
             return temp;
         }
         #endregion
