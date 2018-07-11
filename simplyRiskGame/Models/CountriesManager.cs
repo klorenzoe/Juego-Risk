@@ -12,8 +12,6 @@ namespace simplyRiskGame.Models
     {
         public Dictionary<int, Country> Countries = new Dictionary<int, Country>();
         public Graph<int, string> CountriesGraph = new Graph<int, string>();
-        public DecisionTree Decisions = new DecisionTree();
-
 
         public CountriesManager()
         {
@@ -34,7 +32,7 @@ namespace simplyRiskGame.Models
             Countries.Add(10, new Country("Argentina", 10, new List<int> { 11, 12 }));
             Countries.Add(11, new Country("Brasil", 11, new List<int> { 13, 12, 18, 10 }));
             Countries.Add(12, new Country("Perú", 12, new List<int> { 13, 11, 10 }));
-            Countries.Add(13, new Country("Venezuela ", 13, new List<int> { 4, 11, 12 }));
+            Countries.Add(13, new Country("Venezuela", 13, new List<int> { 3, 11, 12 }));
             //Africa
             Countries.Add(14, new Country("Congo", 14, new List<int> { 18, 15, 19 }));
             Countries.Add(15, new Country("África Oriental", 15, new List<int> { 33, 17, 19, 14, 18, 16 }));
@@ -73,13 +71,16 @@ namespace simplyRiskGame.Models
            // SetCountriesGraph();
         }
 
-        #region Tree
-
-
-
-        #endregion
-
         #region Stuff 
+        public int getIDbyName(string countryName)
+        {
+            for (int i = 1; i <= Countries.Count() ; i++)
+            {
+                if (Countries[i].CountryName == countryName)
+                    return Countries[i].CountryID;
+            }
+            return 0;
+        }
 
         public void UpdateCountriesList()
         {
@@ -198,7 +199,6 @@ namespace simplyRiskGame.Models
             return t;
         }
 #endregion
-
 
         #region Dijkstra
         public void SetCountriesGraph()

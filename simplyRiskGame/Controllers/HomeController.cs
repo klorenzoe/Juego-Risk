@@ -321,6 +321,10 @@ namespace simplyRiskGame.Controllers
             return Json(new { isNear = nearbyCountry(actualCountry, nearCountry) });
         }
 
+       
+
+
+
         [HttpPost]
         public ActionResult initialCountries()
         {
@@ -355,7 +359,7 @@ namespace simplyRiskGame.Controllers
 
             countriesIA[0] = countryNumberIA;
             bool condition = true;
-            while (condition == true)
+            while (condition)
             {
                 if (!countriesPlayer.Contains(countryNumberIA))
                 {
@@ -401,7 +405,7 @@ namespace simplyRiskGame.Controllers
         [HttpPost]
         public ActionResult getMovementLogbook(string _data, bool player = false)
         {
-           
+
             string[] data = _data.Split('|');
             var country1 = 0;
             var country2 = 0;
@@ -429,27 +433,25 @@ namespace simplyRiskGame.Controllers
                 country1 = int.Parse(data[0]);
                 country2 = int.Parse(data[2]);
             }
-            
+
             // look if the countries are neighbors
             int[] troops = manager.getNeighborsTroopsCount(country1, manager.Countries[country1].Owner);
-            if(manager.Countries[country1].Owner == 1)
+            if (manager.Countries[country1].Owner == 1)
             {
-
                 rowNumbers[1]++;
             }
             else
             {
-
                 rowNumbers[2]++;
             }
             if (manager.getNeighborsAlly(country1, manager.Countries[country1].Owner).Contains(country2))
             {
                 manager.Countries[country2].TroopsCount += int.Parse(data[2]);
                 values = "1";
-            }               
+            }
             // neutral or enemies
             else
-            {                
+            {
                 // condition if the country was conquered
                 if (manager.Countries[country2].TroopsCount < int.Parse(data[2]))
                 {
@@ -467,7 +469,7 @@ namespace simplyRiskGame.Controllers
             // values = one if the country was conquered + id deployer + deployer remaining troops + id receiver + receiver remaining troops + player
             values += "|" + country1 + "|" + manager.Countries[country1].TroopsCount + "|" + country2 + "|" +
                manager.Countries[country2].TroopsCount + "|" + manager.Countries[country1].Owner;
-            
+
 
             return Json(new { _values = values });
         }
@@ -482,8 +484,8 @@ namespace simplyRiskGame.Controllers
             int priority = int.Parse(temp[1]) * manager.TroopdforAssign(1) / 100;
             manager.Countries[Convert.ToInt16(temp[0])].TroopsCount = Convert.ToInt16(temp[1]);
 
-            rowNumbers[0]++; 
-            
+           
+
             return Json(new { something = true });
         }
 
@@ -510,6 +512,13 @@ namespace simplyRiskGame.Controllers
 
             return Json(new { troopsOptions = troops });
         }
+
+        [HttpPost]
+        public ActionResult getIdByName(string name)
+        {
+            int _id = manager.getIDbyName(name);
+            return Json(new { id = _id });
+        }  
 
         /// <summary>
         /// this method returns the troop number of each country
@@ -554,9 +563,10 @@ namespace simplyRiskGame.Controllers
         [HttpPost]
         public ActionResult assignTroops()
         {
-            ViewBag.myTroopLimit = manager.TroopdforAssign(1);
+            //ViewBag.myTroopLimit = manager.TroopdforAssign(1);
             ViewBag.IATroopLimit = manager.TroopdforAssign(2);
-            return Json(new { succes = true });
+            var troops = manager.TroopdforAssign(1);
+            return Json(new { Troops = troops });
         }
 
         /// <summary>
@@ -567,7 +577,7 @@ namespace simplyRiskGame.Controllers
         public ActionResult enemyMovements()
         {
             var assign_ = DTree.SetWhereAssignTroops(manager.Countries); //31|2
-
+            Update(assign_);
             var movements_ = DTree.SetWhereToMove(manager.Countries); //31|2|32
 
             var result = "";
@@ -579,16 +589,22 @@ namespace simplyRiskGame.Controllers
             return Json(new { assign = assign_, movements = result });
         }
 
+        private void Update(List<string> moves) {
+
+            for (int i = 0; i < moves.Count(); i++) {
+                string[] temp = moves[i].Split('|');
+                manager.Countries[int.Parse(temp[0])].TroopsCount += int.Parse(temp[1]); 
+            }
+
+        }
 
         public string getMovementLogbook_ (string _data, bool player = false)
         {
-
             string[] data = _data.Split('|');
             var country1 = 0;
             var country2 = 0;
             string troopsNumber = data[2];
             string values = "";
-
 
             if (player)
             {
@@ -608,7 +624,8 @@ namespace simplyRiskGame.Controllers
             else
             {
                 country1 = int.Parse(data[0]);
-                country2 = int.Parse(data[2]);
+                manager.Countries[country1].TroopsCount -= int.Parse(data[2]);
+                country2 = int.Parse(data[1]);
             }
 
             // look if the countries are neighbors
@@ -652,12 +669,31 @@ namespace simplyRiskGame.Controllers
 
             return values;
         }
-        /*
-          1) Colocar lineas de union entre paises (vista)
-          2) Cambiar el turno de la IA para que reciba comandos
-          3) 
-          4)
 
+        [HttpGet]
+
+        public ActionResult getWinner()
+        {
+
+            if (manager.getPlayerCountries(1).Count() == 0)
+            {
+                return Json(new { redirect = "https://photos.bandsintown.com/thumb/6285178.jpeg" }, JsonRequestBehavior.AllowGet);
+            }
+            else if (manager.getPlayerCountries(2).Count() == 0)
+            {
+                return Json(new { redirect = "https://ih1.redbubble.net/image.113831110.0284/flat,550x550,075,f.u4.jpg" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { hello = true });
+            }
+            return Json(new { hello = true });
+        }
+
+        /*
+          1) Colocar lineas de union entre paises (vista) o arreglar los paises??? fuck no se... pero uno se confunde
+          2) Al iniciar no siempre cargan los paises
+          3) Indicar Fin de juego (ganador y perdedor)
          */
     }
 }
